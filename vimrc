@@ -1,28 +1,35 @@
 "Vundle Shit
 set nocompatible 
 filetype off 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/vundle
+call vundle#begin()
 
 Bundle 'gmarik/vundle'
+
 Bundle 'tpope/vim-surround'
-Bundle 'ervandew/supertab'
+Bundle 'tpope/vim-abolish'
+Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-speeddating' 
+
+Bundle 'ervandew/supertab'
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'bling/vim-airline'
 Bundle 'edkolev/tmuxline.vim'
 Bundle 'kien/ctrlp.vim'
-Bundle 'zenburn'
-Bundle 'molokai'
-Bundle 'desert256.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'goldfeld/vim-seek'
-Bundle 'vim-scripts/matchit.zip'
-Bundle 'tpope/vim-speeddating' 
 Bundle 'wellle/targets.vim' 
 Bundle 'koron/nyancat-vim' 
+Bundle 'triglav/vim-visual-increment' 
 
-filetype plugin indent on
+Bundle 'molokai'
+Bundle 'zenburn'
+Bundle 'desert256.vim'
+Bundle 'altercation/vim-colors-solarized'
+call vundle#end()            " required
+filetype plugin indent on    " required
+
 "Other Shit
 set nobackup
 set nowritebackup
@@ -118,8 +125,10 @@ inoremap <C-f> <esc>[s1z=A
 noremap <C-f> <esc>[s1z=A<esc>
 
 "Increment Number
-nnoremap <leader>i <C-a>
-nnoremap <leader>d <C-x>
+nnoremap <leader>a <C-a>
+nnoremap <leader>x <C-x>
+vmap <leader>a <C-a>
+vmap <leader>x <C-x>
 
 "Cap word
 nnoremap <leader>` ve~
@@ -154,7 +163,5 @@ let g:tmuxline_powerline_separators = 0
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
-"lol % lol %
-
 "Ack
-nnoremap <leader>a :Ack <cword><cr>
+nnoremap <leader>g :Ack <cword><cr>
