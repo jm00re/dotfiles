@@ -16,12 +16,12 @@ Bundle 'ervandew/supertab'
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'bling/vim-airline'
 Bundle 'edkolev/tmuxline.vim'
-Bundle 'kien/ctrlp.vim'
 Bundle 'mileszs/ack.vim'
 Bundle 'goldfeld/vim-seek'
 Bundle 'wellle/targets.vim' 
 Bundle 'koron/nyancat-vim' 
 Bundle 'triglav/vim-visual-increment' 
+Bundle 'scrooloose/nerdtree' 
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -56,6 +56,7 @@ set background=dark
 set visualbell
 set wrap
 set linebreak
+set number
 "set nosol
 set showbreak=&&
 set t_Co=16
@@ -81,8 +82,6 @@ map M `
 
 "Buffer Switching
 set hidden
-map } :bn<cr>
-map { :bp<cr>
 map <leader>bd :bd<cr>  
 
 "Text Writing
@@ -130,8 +129,19 @@ nnoremap <leader>x <C-x>
 vmap <leader>a <C-a>
 vmap <leader>x <C-x>
 
+"Periods seperated line to list
+nnoremap <leader>l :s/\.\s*/\.\r/g<cr>
+"lol. 123. Look at this note taking. I need this.
+"Make heading
+nnoremap <leader>1 yypVr=
+nnoremap <leader>2 yypVr-
+
 "Cap word
-nnoremap <leader>` ve~
+nnoremap <leader>` gUw
+
+"Open NERDtree
+map <leader>n :NERDTreeToggle<CR>
+
 
 "Tmux stuff
 let g:tmux_navigator_no_mappings = 1
