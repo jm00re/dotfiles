@@ -14,14 +14,14 @@ Bundle 'tpope/vim-speeddating'
 
 Bundle 'ervandew/supertab'
 Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'bling/vim-airline'
-Bundle 'edkolev/tmuxline.vim'
 Bundle 'mileszs/ack.vim'
-Bundle 'goldfeld/vim-seek'
 Bundle 'wellle/targets.vim' 
 Bundle 'koron/nyancat-vim' 
 Bundle 'triglav/vim-visual-increment' 
 Bundle 'scrooloose/nerdtree' 
+"Bundle 'vim-scripts/buftabs' 
+Bundle 'bling/vim-bufferline' 
+Bundle 'justinmk/vim-sneak' 
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -46,9 +46,7 @@ set cursorline
 set nojoinspaces 
 set ttimeout
 set ttimeoutlen=100
-filetype indent on
-filetype on
-filetype plugin on
+filetype plugin indent on
 set number
 syntax on
 set noshowmode
@@ -64,6 +62,9 @@ let g:solarized_visibility = "high"
 let g:solarized_termcolors = 16 
 
 colorscheme solarized
+"Dirty colorscheme hack
+highlight Normal ctermfg=None ctermbg=Black
+
 "Key Remaps
 " Enter add lines in normal mode
 nmap <S-Enter> O<Esc>
@@ -74,6 +75,12 @@ cnoremap <CR> <CR>
 "j and k move down to the next text
 map j gj
 map k gk
+
+"Make Y make sense
+nnoremap Y y$
+
+"I smashed , to remapped to \
+nnoremap \ ,
 
 "Less stupid line movement
 map L $
@@ -129,18 +136,34 @@ nnoremap <leader>x <C-x>
 vmap <leader>a <C-a>
 vmap <leader>x <C-x>
 
-"Periods seperated line to list
-nnoremap <leader>l :s/\.\s*/\.\r/g<cr>
-"lol. 123. Look at this note taking. I need this.
+"Split windows
+nnoremap <leader>v :vsplit<cr>
+nnoremap <leader>h :split<cr>
+
 "Make heading
 nnoremap <leader>1 yypVr=
 nnoremap <leader>2 yypVr-
+
+"Period Seperated List to MD style list
+nnoremap <leader>ul $xI*<space><esc>:s/\./\r\*/g<cr>
+nnoremap <leader>ol $xI1<space><esc>:s/\./\r\1/g<cr>
 
 "Cap word
 nnoremap <leader>` gUw
 
 "Open NERDtree
 map <leader>n :NERDTreeToggle<CR>
+
+"Close NERDtree after file open
+let NERDTreeQuitOnOpen = 1
+"Close buffer
+nnoremap <leader>d :bd<CR>
+
+"Arrows to change buffers
+nnoremap <left> :bprev<CR>
+nnoremap <right> :bnext<CR>
+nnoremap <leader>c :bd<CR>
+
 
 
 "Tmux stuff
@@ -160,18 +183,36 @@ inoremap <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 "Airline Stuff
 "
 
-set laststatus=2
-
-let g:airline_left_sep = ''
-let g:airline_left_sep = ''  
-let g:airline_right_sep = ''
-let g:airline_right_sep = ''
-let g:airline#extensions#tmuxline#enabled = 0
-let g:tmuxline_powerline_separators = 0
-
-"CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
+"Buftabs Stuff
+"let g:buftabs_in_statusline=1
+"let g:buftabs_only_basename=1
+"let g:airline_left_sep = ''
+"let g:airline_left_sep = ''  
+"let g:airline_right_sep = ''
+"let g:airline_right_sep = ''
+"let g:airline#extensions#tmuxline#enabled = 0
+"let g:tmuxline_powerline_separators = 0
+"
+""CtrlP
+"let g:ctrlp_map = '<c-p>'
+"let g:ctrlp_cmd = 'CtrlP'
 
 "Ack
 nnoremap <leader>g :Ack <cword><cr>
+
+"bufferline stuff
+set laststatus=2
+let g:bufferline_solo_highlight = 0
+let g:bufferline_inactive_highlight = '' "No highlighting
+let g:bufferline_active_highlight = '' "No highlighting
+let g:bufferline_rotate = 1
+let g:bufferline_fixed_index = 0 "always first
+let g:bufferline_show_bufnr = 0
+let g:bufferline_fname_mod = ':t'
+
+
+let g:bufferline_echo = 0
+  autocmd VimEnter *
+    \ let &statusline='%{bufferline#refresh_status()}'
+      \ .bufferline#get_status_string()
+
