@@ -22,6 +22,8 @@ Bundle 'justinmk/vim-sneak'
 Bundle 'sophacles/vim-processing' 
 Bundle 'junegunn/goyo.vim' 
 Bundle 'Valloric/YouCompleteMe' 
+Bundle 'Shougo/unite.vim' 
+Bundle 'vim-scripts/bufkill.vim' 
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -48,6 +50,8 @@ set softtabstop=4
 " Auto indenting
 set autoindent
 set smarttab
+" yank / paste to clipboard
+set clipboard=unnamed
 " Case insensitive searching
 set incsearch
 set ignorecase
@@ -75,6 +79,8 @@ set display=lastline
 set hidden
 " ooo pretty
 syntax on
+"Turn off stupid preview window
+set completeopt-=preview
 " Maximum colors
 set t_Co=256
 
@@ -107,58 +113,70 @@ map K i<cr><esc>
 
 "Text Writing, copped straight from Dr. Bunsen 
 func! WordProcessorMode() 
-setlocal formatoptions=1 
-setlocal noexpandtab 
-setlocal spell spelllang=en_us 
-setlocal spell
-set complete+=s
-set formatprg=par
-setlocal wrap 
-setlocal linebreak 
-setlocal showbreak=
-setlocal nocursorline
+	setlocal formatoptions=1 
+	setlocal noexpandtab 
+	setlocal spell spelllang=en_us 
+	setlocal spell
+	set complete+=s
+	set formatprg=par
+	setlocal wrap 
+	setlocal linebreak 
+	setlocal showbreak=
 endfu 
 com! WP call WordProcessorMode()
 
 "File Type Settings
-autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()  
-autocmd BufEnter,BufNewFile,BufRead *.txt set syntax=markdown
-autocmd BufEnter,BufNewFile,BufRead *.md call WordProcessorMode()  
-autocmd BufEnter,BufRead,BufNewFile *.pde setf java
+augroup filetxt_txt
+	autocmd!
+	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()  
+	autocmd BufEnter,BufNewFile,BufRead *.txt set syntax=markdown
+augroup END
+
+augroup filetype_md
+	autocmd!
+	autocmd BufEnter,BufRead,BufNewFile *.md call WordProcessorMode()  
+augroup END
+
+augroup filetype_pde
+	autocmd!
+	autocmd BufEnter,BufRead,BufNewFile *.pde setf java
+augroup END
+
 "Remove auto comment
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+augroup remove_autocomment
+	autocmd!
+	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+augroup END
 
 "Leader Keys
 let mapleader = ','
 
 "Edit .vimrc
-nnoremap <leader>ev :split ~/.vimrc<cr>
+nnoremap <silent> <leader>ev :split ~/.vimrc<cr>
 "Source .vimrc
-nnoremap <leader>sv :source ~/.vimrc<cr>
+nnoremap <silent> <leader>sv :source ~/.vimrc<cr>
 "Fast Saves
-nnoremap <leader>w :w<cr>
-nnoremap <leader>wa :wa<cr>
-nnoremap <leader>wq :wq<cr>
-nnoremap <leader>q :q<cr>
+nnoremap <silent> <leader>w :w<cr>
+nnoremap <silent> <leader>wa :wa<cr>
+nnoremap <silent> <leader>wq :wq<cr>
+nnoremap <silent> <leader>q :q<cr>
 
 "Easier pasting from clipboard
-nnoremap <leader>p "+p
-nnoremap <leader>P "+P
-vnoremap <leader>p "+p
-vnoremap <leader>P "+P
+nmap <leader>p "+p
+nmap <leader>P "+P
+vmap <leader>p "+p
+vmap <leader>P "+P
 
 "Easier wanking to clipboard
-nnoremap <leader>y "+y
-nnoremap <leader>Y "+y$
-vnoremap <leader>y "+y
-vnoremap <leader>Y "+y$
+nmap <leader>y "+y
+nmap <leader>Y "+y$
+vmap <leader>y "+y
+vmap <leader>Y "+y$
 
 "Buffer Management
-nnoremap <silent> <leader>bd :bd<CR>  
-nnoremap <silent> <leader>d :bd<CR>
 nnoremap <silent> <left> :bprev<CR>
 nnoremap <silent> <right> :bnext<CR>
-nnoremap <silent> <leader>c :bd<CR>
+nnoremap <silent> <leader>d :BD<CR>
 
 "Quick spelling correction
 nnoremap <leader>z 1z=
@@ -179,6 +197,7 @@ nnoremap <silent> <leader>h :split<cr>
 nnoremap <leader>1 I# <esc>
 nnoremap <leader>2 I## <esc>
 nnoremap <leader>3 I### <esc>
+
 vnoremap <leader>1 I# <esc>
 vnoremap <leader>2 I## <esc>
 vnoremap <leader>3 I### <esc>
@@ -195,9 +214,6 @@ nnoremap <silent> <leader>g :Goyo<cr>
 
 "Cap word
 nnoremap <leader>` gUw
-
-"Open netrw. 
-map <silent> <leader>n :E<cr>
 
 "Tmux stuff
 let g:tmux_navigator_no_mappings = 1
@@ -238,3 +254,14 @@ let g:netrw_banner=0
 
 "Disable folding in vim markdown plugin
 let g:vim_markdown_folding_disabled=1
+
+"Open netrw. 
+map <silent> <space>n :E<cr>
+
+"Unite stuff
+",nnoremap <C-p> :Unite -no-resize -no-split -start-insert file_rec<cr>
+nnoremap <space>m :Unite -no-resize -no-split file_rec<cr>
+nnoremap <space>b :Unite -no-resize -no-split buffer<cr>
+nnoremap <space>v :Unite -no-resize -no-split -start-insert buffer<cr>
+"nnoremap <leader>/ :Unite grep:.<cr>
+
