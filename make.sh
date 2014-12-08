@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dir=~/dotfiles
+dir=~/.dotfiles
 files="zshrc vimrc tmux.conf"
 
 cd $dir

@@ -23,7 +23,7 @@ zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
+#eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -35,15 +35,32 @@ zstyle ':completion:*' verbose true
 
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-#export TERM="screen-256color"
 #alias tmux="TERM=screen-256color-bce tmux"
-alias ls="ls --color"
+
+export TERM="xterm-256color"
 alias tmux="TERM=screen-256color-bce tmux"
+
+alias todo="vim ~/.todo.txt"
+alias scratch="vim ~/.scratch.txt"
+
+alias ls="ls -G"
+
 alias less="less -R"
 if [ "$TMUX" = "" ]; then tmux; fi
 
 autoload -U colors && colors
-PS1="%{$fg[green]%}[%n@%{$fg[green]%}%m]%{$fg[white]%}[%~] %{$fg[green]%}%% %{$reset_color%}"
+PS1="%{$fg[green]%}[%n@%{$fg[green]%}%m]%{$fg[yellow]%}[%~] %{$fg[green]%}%% %{$reset_color%}"
+
+function least() 
+{
+	cat "$@" | lolcat -f | less -R
+}
+	
+function pythong() 
+{
+	python "$@" | lolcat -f 
+}
+
 #PROMPT="%t %{$fg[cyan]%}%?%{$resetcolor%} %{$fg[blue]%}%~%{$resetcolor%} %# "
 #RPROMPT="%{$fg[green]%}%t%{$reset_color%}"
 
@@ -80,7 +97,7 @@ function spectrum_bls() {
     print -P -- "$BG[$code]$code: Test %{$reset_color%}"
   done
 }
-eval $(dircolors -b ~/.dir_colors)
+#eval $(dircolors -b ~/.dir_colors)
 
 #PROMPT="%F{74}Test%f"
 #

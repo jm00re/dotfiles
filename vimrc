@@ -13,7 +13,7 @@ Bundle 'tpope/vim-speeddating'
 Bundle 'tpope/vim-markdown' 
 
 Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'mileszs/ack.vim'
+Bundle 'rking/ag.vim'
 Bundle 'wellle/targets.vim' 
 Bundle 'koron/nyancat-vim' 
 Bundle 'triglav/vim-visual-increment' 
@@ -22,8 +22,12 @@ Bundle 'justinmk/vim-sneak'
 Bundle 'sophacles/vim-processing' 
 Bundle 'junegunn/goyo.vim' 
 Bundle 'Valloric/YouCompleteMe' 
-Bundle 'Shougo/unite.vim' 
 Bundle 'vim-scripts/bufkill.vim' 
+Bundle 'mhinz/vim-startify' 
+Bundle 'godlygeek/tabular' 
+
+Bundle 'Shougo/unite.vim' 
+Bundle 'tsukkee/unite-tag' 
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -67,6 +71,8 @@ set ttimeout
 set ttimeoutlen=100
 " Yes?
 set number
+"Find tags file
+set tags=tags;/
 " Fixs weird dinging 
 set visualbell
 " Enable line wrapping and put && at start of linebreak
@@ -88,9 +94,7 @@ colorscheme base16-default
 
 "Key Remaps
 " Enter adds lines in normal mode
-nmap <S-Enter> O<Esc>
-nmap <CR> o<Esc>
-cmap <CR> <CR>
+nnoremap <CR> o<Esc>
 cnoremap <CR> <CR>
 
 "j and k move down to the next text on wrapped lines
@@ -120,6 +124,8 @@ func! WordProcessorMode()
 	set complete+=s
 	set formatprg=par
 	setlocal wrap 
+	setlocal nolist
+	set formatoptions+=l
 	setlocal linebreak 
 	setlocal showbreak=
 endfu 
@@ -179,9 +185,10 @@ nnoremap <silent> <right> :bnext<CR>
 nnoremap <silent> <leader>d :BD<CR>
 
 "Quick spelling correction
-nnoremap <leader>z 1z=
 inoremap <C-f> <esc>[s1z=gi
-nnoremap <C-f> <esc>[s1z=
+nnoremap <C-f> [s1z=<C-o>
+
+nnoremap <C-]> <C-]>zt
 
 "Increment Number
 nnoremap <leader>a <C-a>
@@ -205,12 +212,12 @@ vnoremap <leader>3 I### <esc>
 "List
 "Command to make ordered lists
 command! -nargs=0 -range=% Number <line1>,<line2>s/^\s*\zs/\=(line('.') - <line1>+1).'. '
-vnoremap <silent> <leader>u I* <esc> 
-nnoremap <silent> <leader>u I* <esc> 
+vnoremap <silent> <leader>u I+ <esc> 
+nnoremap <silent> <leader>u I+ <esc> 
 vnoremap <silent> <leader>o :Number<cr>
 
 " Turn Goyo on, Not sure if I like this. 
-nnoremap <silent> <leader>g :Goyo<cr>
+"nnoremap <silent> <leader>g :Goyo<cr>
 
 "Cap word
 nnoremap <leader>` gUw
@@ -263,5 +270,11 @@ map <silent> <space>n :E<cr>
 nnoremap <space>m :Unite -no-resize -no-split file_rec<cr>
 nnoremap <space>b :Unite -no-resize -no-split buffer<cr>
 nnoremap <space>v :Unite -no-resize -no-split -start-insert buffer<cr>
+nnoremap <space>c :Unite -no-resize -no-split -start-insert tag/include<cr>
 "nnoremap <leader>/ :Unite grep:.<cr>
 
+" AG stuff
+nnoremap <leader>g :Ag <cword><cr>
+
+" Load tabular
+let g:tabular_loaded = 1
