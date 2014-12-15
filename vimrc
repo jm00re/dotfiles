@@ -290,6 +290,7 @@ nnoremap <space>c :Unite -silent -no-resize -no-split -start-insert tag/include<
 nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
 "make q default to close vimfiler
 autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
+let g:vimfiler_force_overwrite_statusline = 0
 
 " AG stuff
 nnoremap <leader>g :Ag <cword><cr>
