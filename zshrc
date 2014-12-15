@@ -49,7 +49,7 @@ alias less="less -R"
 if [ "$TMUX" = "" ]; then tmux; fi
 
 autoload -U colors && colors
-PS1="%{$fg[green]%}[%n@%{$fg[green]%}%m]%{$fg[yellow]%}[%~] %{$fg[green]%}%% %{$reset_color%}"
+PS1="%{$fg[red]%}[%n@%{$fg[red]%}%m]%{$fg[blue]%}[%~] %{$fg[red]%}%% %{$reset_color%}"
 
 function least() 
 {
@@ -134,7 +134,7 @@ bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 
 function zle-line-init zle-keymap-select {
-    VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+    VIM_PROMPT="%{$fg[red]%} [% NORMAL]%  %{$reset_color%}"
     RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
     zle reset-prompt
 }

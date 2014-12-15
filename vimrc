@@ -25,9 +25,12 @@ Bundle 'Valloric/YouCompleteMe'
 Bundle 'vim-scripts/bufkill.vim' 
 Bundle 'mhinz/vim-startify' 
 Bundle 'godlygeek/tabular' 
+Bundle 'Shougo/vimproc.vim' 
 
 Bundle 'Shougo/unite.vim' 
 Bundle 'tsukkee/unite-tag' 
+Bundle 'Shougo/unite-outline' 
+Bundle 'Shougo/vimfiler.vim' 
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -262,19 +265,39 @@ let g:netrw_banner=0
 "Disable folding in vim markdown plugin
 let g:vim_markdown_folding_disabled=1
 
-"Open netrw. 
-map <silent> <space>n :E<cr>
-
 "Unite stuff
-",nnoremap <C-p> :Unite -no-resize -no-split -start-insert file_rec<cr>
-nnoremap <space>m :Unite -no-resize -no-split file_rec<cr>
-nnoremap <space>b :Unite -no-resize -no-split buffer<cr>
-nnoremap <space>v :Unite -no-resize -no-split -start-insert buffer<cr>
-nnoremap <space>c :Unite -no-resize -no-split -start-insert tag/include<cr>
-"nnoremap <leader>/ :Unite grep:.<cr>
+"Unite ag settings
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts =
+          \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
+          \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+let g:unite_source_grep_recursive_opt = ''
+
+let g:unite_source_history_yank_enable = 1
+
+nnoremap <space>y :Unite -silent -no-resize history/yank<cr>
+
+nnoremap <space>m :Unite -silent -no-resize -no-split file_mru<cr>
+nnoremap <space>b :Unite -silent -no-resize -no-split buffer<cr>
+nnoremap <space>o :Unite -silent -no-resize -no-split outline<cr>
+nnoremap <space>/ :Unite -silent -no-resize -no-split grep:.<cr>
+
+nnoremap <space>v :Unite -silent -no-resize -no-split -start-insert buffer<cr>
+nnoremap <space>c :Unite -silent -no-resize -no-split -start-insert tag/include<cr>
+
+"VimFiler Stuff
+nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
+"make q default to close vimfiler
+autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
 
 " AG stuff
 nnoremap <leader>g :Ag <cword><cr>
 
 " Load tabular
 let g:tabular_loaded = 1
+
+" Turn off K = docs in pde files
+let g:processing_doc_style = 0
+
+" Use vimfiler as default file explorer
+let g:vimfiler_as_default_explorer = 1
