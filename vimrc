@@ -31,6 +31,7 @@ Bundle 'Shougo/unite.vim'
 Bundle 'tsukkee/unite-tag' 
 Bundle 'Shougo/unite-outline' 
 Bundle 'Shougo/vimfiler.vim' 
+Bundle 'Shougo/neomru.vim' 
 
 Bundle 'molokai'
 Bundle 'zenburn'
