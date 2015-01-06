@@ -17,21 +17,23 @@ Bundle 'rking/ag.vim'
 Bundle 'wellle/targets.vim' 
 Bundle 'koron/nyancat-vim' 
 Bundle 'triglav/vim-visual-increment' 
-Bundle 'bling/vim-bufferline' 
 Bundle 'justinmk/vim-sneak' 
 Bundle 'sophacles/vim-processing' 
 Bundle 'junegunn/goyo.vim' 
-Bundle 'Valloric/YouCompleteMe' 
 Bundle 'vim-scripts/bufkill.vim' 
 Bundle 'mhinz/vim-startify' 
-Bundle 'godlygeek/tabular' 
 Bundle 'Shougo/vimproc.vim' 
+Bundle 'ap/vim-buftabline'
+Bundle 'reedes/vim-wordy'
 
 Bundle 'Shougo/unite.vim' 
 Bundle 'tsukkee/unite-tag' 
 Bundle 'Shougo/unite-outline' 
 Bundle 'Shougo/vimfiler.vim' 
 Bundle 'Shougo/neomru.vim' 
+Bundle 'Shougo/neocomplete.vim' 
+Bundle 'thinca/vim-unite-history' 
+
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -81,8 +83,9 @@ set tags=tags;/
 set visualbell
 " Enable line wrapping and put && at start of linebreak
 set wrap
-set showbreak=&&
+"set showbreak=&&
 set linebreak
+set breakindent
 " Doesn't turn long wrapped lines into @s 
 set display=lastline
 " Switch from unsaved buffers
@@ -116,7 +119,7 @@ map L $
 map H ^
 
 "K breaks lines, J makes more sense"
-nnoremap J :join<cr>
+nnoremap J :join!<cr>
 map K i<cr><esc>
 
 "Text Writing, copped straight from Dr. Bunsen 
@@ -139,7 +142,6 @@ com! WP call WordProcessorMode()
 augroup filetxt_txt
 	autocmd!
 	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()  
-	autocmd BufEnter,BufNewFile,BufRead *.txt set syntax=markdown
 augroup END
 
 augroup filetype_md
@@ -188,10 +190,17 @@ nnoremap <silent> <left> :bprev<CR>
 nnoremap <silent> <right> :bnext<CR>
 nnoremap <silent> <leader>d :BD<CR>
 
-"Quick spelling correction
-inoremap <C-f> <esc>[s1z=gi
-nnoremap <C-f> [s1z=<C-o>
+"Tab Management
+nnoremap <silent> <down> :tabprev<CR>
+nnoremap <silent> <up> :tabnext<CR>
 
+
+"Quick spelling correction
+nnoremap <C-f> [s1z=<c-o>
+inoremap <C-f> <c-g>u<Esc>[s1z=`]A<c-g>u
+
+"Ctag search selection lands at the top of the window
+"Why wouldn't you want to see the contents of a function you're searching for?
 nnoremap <C-]> <C-]>zt
 
 "Increment Number
@@ -221,7 +230,12 @@ nnoremap <silent> <leader>u I+ <esc>
 vnoremap <silent> <leader>o :Number<cr>
 
 " Turn Goyo on, Not sure if I like this. 
-"nnoremap <silent> <leader>g :Goyo<cr>
+nnoremap <silent> <leader>g :Goyo<cr>
+
+augroup goyo
+	autocmd! User GoyoLeave
+	autocmd User GoyoLeave nested source ~/.vimrc
+augroup end
 
 "Cap word
 nnoremap <leader>` gUw
@@ -243,21 +257,9 @@ inoremap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 
 "bufferline stuff
 set laststatus=2 "always show statusline
-let g:bufferline_solo_highlight = 0
-let g:bufferline_inactive_highlight = 'StatusLineNC' "No highlighting
-let g:bufferline_active_highlight = 'StatusLine' "No highlighting
-let g:bufferline_rotate = 0
-let g:bufferline_fixed_index = -1 "always first
-let g:bufferline_show_bufnr = 0
-let g:bufferline_fname_mod = ':t'
-let g:bufferline_active_buffer_left = ''
-let g:bufferline_active_buffer_right = ''
 
-let g:bufferline_echo = 0
-  autocmd VimEnter *
-    \ let &statusline='%{bufferline#refresh_status()}'
-      \ .bufferline#get_status_string()
-"let g:bufferline_active_highlight = 'StatusLine'
+"statusline ala tpope
+set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
 
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
@@ -276,15 +278,17 @@ let g:unite_source_grep_recursive_opt = ''
 
 let g:unite_source_history_yank_enable = 1
 
-nnoremap <space>y :Unite -silent -no-resize history/yank<cr>
+nnoremap <space>y :Unite -silent -no-resize -no-split history/yank<cr>
 
 nnoremap <space>m :Unite -silent -no-resize -no-split file_mru<cr>
 nnoremap <space>b :Unite -silent -no-resize -no-split buffer<cr>
 nnoremap <space>o :Unite -silent -no-resize -no-split outline<cr>
 nnoremap <space>/ :Unite -silent -no-resize -no-split grep:.<cr>
+nnoremap <space>h :Unite -silent -no-resize -no-split history/command<cr>
 
 nnoremap <space>v :Unite -silent -no-resize -no-split -start-insert buffer<cr>
-nnoremap <space>c :Unite -silent -no-resize -no-split -start-insert tag/include<cr>
+"nnoremap <space>c :Unite -silent -no-resize -no-split tag/include<cr>
+nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
 
 "VimFiler Stuff
 nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
@@ -293,13 +297,43 @@ autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
 let g:vimfiler_force_overwrite_statusline = 0
 
 " AG stuff
-nnoremap <leader>g :Ag <cword><cr>
-
-" Load tabular
-let g:tabular_loaded = 1
+nnoremap <leader>/ :Ag <cword><cr>
 
 " Turn off K = docs in pde files
 let g:processing_doc_style = 0
 
 " Use vimfiler as default file explorer
 let g:vimfiler_as_default_explorer = 1
+
+"Lets me use enter in the commandline history buffer, It's usually mapped to add lines
+autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
+
+" neocomplete stuff I don't really care understand but is in the documentation. 
+let g:acp_enableAtStartup = 0
+let g:neocomplete#enable_at_startup = 1
+let g:neocomplete#enable_smart_case = 1
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+if !exists('g:neocomplete#sources#omni#input_patterns')
+	  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ neocomplete#start_manual_complete()
+  function! s:check_back_space() "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction"
+
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+
+"Wordy stuff
+hi SpellBad cterm=underline ctermfg=darkred
+nnoremap <silent> <leader>z :NextWordy<cr>
+nnoremap <silent> <leader>Z :NoWordy<cr>
+
