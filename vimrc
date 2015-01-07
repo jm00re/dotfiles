@@ -1,4 +1,3 @@
-"Vundle Shit
 set nocompatible 
 filetype off 
 set rtp+=~/.vim/bundle/vundle
@@ -19,7 +18,6 @@ Bundle 'koron/nyancat-vim'
 Bundle 'triglav/vim-visual-increment' 
 Bundle 'justinmk/vim-sneak' 
 Bundle 'sophacles/vim-processing' 
-Bundle 'junegunn/goyo.vim' 
 Bundle 'vim-scripts/bufkill.vim' 
 Bundle 'mhinz/vim-startify' 
 Bundle 'Shougo/vimproc.vim' 
@@ -33,7 +31,6 @@ Bundle 'Shougo/vimfiler.vim'
 Bundle 'Shougo/neomru.vim' 
 Bundle 'Shougo/neocomplete.vim' 
 Bundle 'thinca/vim-unite-history' 
-
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -229,14 +226,6 @@ vnoremap <silent> <leader>u I+ <esc>
 nnoremap <silent> <leader>u I+ <esc> 
 vnoremap <silent> <leader>o :Number<cr>
 
-" Turn Goyo on, Not sure if I like this. 
-nnoremap <silent> <leader>g :Goyo<cr>
-
-augroup goyo
-	autocmd! User GoyoLeave
-	autocmd User GoyoLeave nested source ~/.vimrc
-augroup end
-
 "Cap word
 nnoremap <leader>` gUw
 
@@ -261,6 +250,11 @@ set laststatus=2 "always show statusline
 "statusline ala tpope
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
 
+"Wordy stuff
+hi SpellBad cterm=underline ctermfg=darkred
+nnoremap <silent> <leader>z :NextWordy<cr>
+nnoremap <silent> <leader>Z :NoWordy<cr>
+
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
 let g:netrw_banner=0
@@ -276,6 +270,9 @@ let g:unite_source_grep_default_opts =
           \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
 let g:unite_source_grep_recursive_opt = ''
 
+"Set unite highlight color as the cursorline
+call unite#custom#profile('default', 'context', { 'cursor_line_highlight' : 'CursorLine' })
+
 let g:unite_source_history_yank_enable = 1
 
 nnoremap <space>y :Unite -silent -no-resize -no-split history/yank<cr>
@@ -283,8 +280,10 @@ nnoremap <space>y :Unite -silent -no-resize -no-split history/yank<cr>
 nnoremap <space>m :Unite -silent -no-resize -no-split file_mru<cr>
 nnoremap <space>b :Unite -silent -no-resize -no-split buffer<cr>
 nnoremap <space>o :Unite -silent -no-resize -no-split outline<cr>
-nnoremap <space>/ :Unite -silent -no-resize -no-split grep:.<cr>
 nnoremap <space>h :Unite -silent -no-resize -no-split history/command<cr>
+
+nnoremap <space>/ :Unite -silent -no-start-insert -no-resize -no-split grep:.<cr>
+nnoremap <leader>/ :UniteWithCursorWord -silent -no-start-insert -no-resize -no-split grep:.<cr>
 
 nnoremap <space>v :Unite -silent -no-resize -no-split -start-insert buffer<cr>
 "nnoremap <space>c :Unite -silent -no-resize -no-split tag/include<cr>
@@ -297,7 +296,7 @@ autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
 let g:vimfiler_force_overwrite_statusline = 0
 
 " AG stuff
-nnoremap <leader>/ :Ag <cword><cr>
+"nnoremap <leader>/ :Ag <cword><cr>
 
 " Turn off K = docs in pde files
 let g:processing_doc_style = 0
@@ -308,12 +307,13 @@ let g:vimfiler_as_default_explorer = 1
 "Lets me use enter in the commandline history buffer, It's usually mapped to add lines
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
 
-" neocomplete stuff I don't really care understand but is in the documentation. 
+" neocomplete stuff I don't really care to understand but makes neocomplete work how I want
 let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+
 if !exists('g:neocomplete#sources#omni#input_patterns')
 	  let g:neocomplete#sources#omni#input_patterns = {}
 endif
@@ -331,9 +331,4 @@ function! s:my_cr_function()
   " For no inserting <CR> key.
   "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
-
-"Wordy stuff
-hi SpellBad cterm=underline ctermfg=darkred
-nnoremap <silent> <leader>z :NextWordy<cr>
-nnoremap <silent> <leader>Z :NoWordy<cr>
 
