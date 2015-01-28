@@ -40,16 +40,22 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 export TERM="xterm-256color"
 alias tmux="TERM=screen-256color-bce tmux"
 
-alias todo="vim ~/.todo.txt"
+alias todo="vim ~/.todo.md"
 alias scratch="vim ~/.scratch.txt"
 
 alias ls="ls -G"
 
 alias less="less -R"
-if [ "$TMUX" = "" ]; then tmux; fi
+#if [ "$TMUX" = "" ]; then tmux; fi
+if which tmux >/dev/null 2>&1; then
+    #if not inside a tmux session, and if no session is started, start a new session
+    test -z "$TMUX" && (tmux attach || tmux new-session)
+fi
 
 autoload -U colors && colors
-PS1="%{$fg[red]%}[%n@%{$fg[red]%}%m]%{$fg[blue]%}[%~] %{$fg[red]%}%% %{$reset_color%}"
+PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~] %{$fg[blue]%}%% %{$reset_color%}"
+
+export GOPATH=$HOME/Code/Go
 
 function least() 
 {
@@ -134,7 +140,7 @@ bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 
 function zle-line-init zle-keymap-select {
-    VIM_PROMPT="%{$fg[red]%} [% NORMAL]%  %{$reset_color%}"
+	VIM_PROMPT="%{$fg[blue]%} [% NORMAL]%  %{$reset_color%}"
     RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
     zle reset-prompt
 }
