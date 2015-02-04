@@ -9,7 +9,7 @@ Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-speeddating' 
-Bundle 'tpope/vim-markdown' 
+"Bundle 'tpope/vim-markdown' 
 
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'rking/ag.vim'
@@ -23,6 +23,10 @@ Bundle 'mhinz/vim-startify'
 Bundle 'Shougo/vimproc.vim' 
 Bundle 'ap/vim-buftabline'
 Bundle 'reedes/vim-wordy'
+Bundle 'fatih/vim-go'
+Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'gabrielelana/vim-markdown'
+"Bundle 'hdima/python-syntax'
 
 Bundle 'Shougo/unite.vim' 
 Bundle 'tsukkee/unite-tag' 
@@ -95,7 +99,17 @@ set completeopt-=preview
 set t_Co=256
 
 colorscheme base16-default
+"colorscheme molokai
 
+hi TabLineFill ctermfg=0 ctermbg=0
+
+"hi TabLineSel ctermfg=Red ctermbg=Yellow
+hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
+hi BufTabLineCurrent ctermfg=DarkGreen ctermbg=black
+hi BufTabLineHidden ctermbg=Black ctermfg=Gray
+
+"hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
+"hi BufTabLineCurrent ctermfg=DarkGreen ctermbg=black
 "Key Remaps
 " Enter adds lines in normal mode
 nnoremap <CR> o<Esc>
@@ -161,7 +175,7 @@ augroup END
 let mapleader = ','
 
 "Edit .vimrc
-nnoremap <silent> <leader>ev :split ~/.vimrc<cr>
+nnoremap <silent> <leader>ev :badd ~/.vimrc<cr>
 "Source .vimrc
 nnoremap <silent> <leader>sv :source ~/.vimrc<cr>
 "Fast Saves
@@ -169,6 +183,9 @@ nnoremap <silent> <leader>w :w<cr>
 nnoremap <silent> <leader>wa :wa<cr>
 nnoremap <silent> <leader>wq :wq<cr>
 nnoremap <silent> <leader>q :q<cr>
+
+" Close quickfix list
+nnoremap <silent> <leader>c :ccl<cr>
 
 "Easier pasting from clipboard
 nmap <leader>p "+p
@@ -219,11 +236,14 @@ vnoremap <leader>1 I# <esc>
 vnoremap <leader>2 I## <esc>
 vnoremap <leader>3 I### <esc>
 
+vnoremap <silent> <leader>1 :s/^/\#\ / <cr> 
+vnoremap <silent> <leader>2 :s/^/\##\ / <cr> 
+vnoremap <silent> <leader>3 :s/^/\###\ / <cr> 
 "List
 "Command to make ordered lists
 command! -nargs=0 -range=% Number <line1>,<line2>s/^\s*\zs/\=(line('.') - <line1>+1).'. '
-vnoremap <silent> <leader>u I+ <esc> 
-nnoremap <silent> <leader>u I+ <esc> 
+vnoremap <silent> <leader>l :s/^/\+\ / <cr> 
+nnoremap <silent> <leader>l I+ <esc> 
 vnoremap <silent> <leader>o :Number<cr>
 
 "Cap word
@@ -245,7 +265,8 @@ inoremap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 "nnoremap <leader>g :Ack <cword><cr>
 
 "bufferline stuff
-set laststatus=2 "always show statusline
+"set laststatus=2 "always show statusline
+set laststatus=0 "always show statusline
 
 "statusline ala tpope
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
@@ -255,12 +276,17 @@ hi SpellBad cterm=underline ctermfg=darkred
 nnoremap <silent> <leader>z :NextWordy<cr>
 nnoremap <silent> <leader>Z :NoWordy<cr>
 
+"zt sucks
+nnoremap <leader>t zt
+
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
 let g:netrw_banner=0
 
 "Disable folding in vim markdown plugin
-let g:vim_markdown_folding_disabled=1
+let g:markdown_enable_folding = 0
+let g:markdown_include_jekyll_support = 0
+let g:markdown_enable_mappings = 0
 
 "Unite stuff
 "Unite ag settings
@@ -293,6 +319,8 @@ nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
 nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
 "make q default to close vimfiler
 autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
+autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
+
 let g:vimfiler_force_overwrite_statusline = 0
 
 " AG stuff
@@ -307,12 +335,48 @@ let g:vimfiler_as_default_explorer = 1
 "Lets me use enter in the commandline history buffer, It's usually mapped to add lines
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
 
+"Rainbow Parenthesis stuff
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+augroup rainbow
+	au VimEnter * RainbowParenthesesToggle
+	au Syntax * RainbowParenthesesLoadRound
+	au Syntax * RainbowParenthesesLoadSquare
+	au Syntax * RainbowParenthesesLoadBraces
+augroup END
+
+" make Go look beautiful
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+
+let g:go_doc_keywordprg_enabled = 0
+
+" make python look beautiful
+"let g:python_highlight_all = 1
+
 " neocomplete stuff I don't really care to understand but makes neocomplete work how I want
 let g:acp_enableAtStartup = 0
 let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 let g:neocomplete#sources#syntax#min_keyword_length = 3
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 
 if !exists('g:neocomplete#sources#omni#input_patterns')
 	  let g:neocomplete#sources#omni#input_patterns = {}
