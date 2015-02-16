@@ -5,7 +5,6 @@ call vundle#begin()
 
 Bundle 'gmarik/vundle'
 
-Bundle 'tpope/vim-abolish'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-speeddating' 
@@ -367,6 +366,8 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 
 let g:go_doc_keywordprg_enabled = 0
+" Auto add imports
+"let g:go_fmt_command = "goimports"
 
 " make python look beautiful
 "let g:python_highlight_all = 1
