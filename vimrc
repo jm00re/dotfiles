@@ -25,6 +25,7 @@ Bundle 'reedes/vim-wordy'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
+
 "Bundle 'hdima/python-syntax'
 
 Bundle 'Shougo/unite.vim' 
@@ -43,6 +44,7 @@ Bundle 'nanotech/jellybeans.vim'
 Bundle 'chriskempson/base16-vim'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'ronny/birds-of-paradise.vim'
+Bundle 'morhetz/gruvbox'
 
 call vundle#end()            " required
 
@@ -97,8 +99,9 @@ set completeopt-=preview
 " Maximum colors
 set t_Co=256
 
-colorscheme base16-default
+"colorscheme base16-default
 "colorscheme molokai
+colorscheme gruvbox
 
 hi TabLineFill ctermfg=0 ctermbg=0
 
@@ -397,3 +400,4 @@ function! s:my_cr_function()
   "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
 endfunction
 
+let g:neocomplete#use_vimproc = 1
