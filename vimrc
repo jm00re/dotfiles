@@ -103,6 +103,9 @@ set t_Co=256
 "colorscheme molokai
 colorscheme gruvbox
 
+" Gruvbox had some slightly dark word background. This fixes that
+hi Normal ctermbg = 0
+
 hi TabLineFill ctermfg=0 ctermbg=0
 
 "hi TabLineSel ctermfg=Red ctermbg=Yellow
