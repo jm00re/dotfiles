@@ -1,5 +1,5 @@
-set nocompatible 
-filetype off 
+set nocompatible
+filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#begin()
 
@@ -7,34 +7,32 @@ Bundle 'gmarik/vundle'
 
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-speeddating' 
-"Bundle 'tpope/vim-markdown' 
+Bundle 'tpope/vim-speeddating'
 
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'rking/ag.vim'
-Bundle 'wellle/targets.vim' 
-Bundle 'koron/nyancat-vim' 
-Bundle 'triglav/vim-visual-increment' 
-Bundle 'justinmk/vim-sneak' 
-Bundle 'sophacles/vim-processing' 
-Bundle 'vim-scripts/bufkill.vim' 
-Bundle 'mhinz/vim-startify' 
-Bundle 'Shougo/vimproc.vim' 
+Bundle 'wellle/targets.vim'
+Bundle 'koron/nyancat-vim'
+Bundle 'triglav/vim-visual-increment'
+Bundle 'justinmk/vim-sneak'
+Bundle 'sophacles/vim-processing'
+Bundle 'vim-scripts/bufkill.vim'
+Bundle 'mhinz/vim-startify'
+Bundle 'Shougo/vimproc.vim'
 Bundle 'ap/vim-buftabline'
 Bundle 'reedes/vim-wordy'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
+Bundle 'bronson/vim-trailing-whitespace'
 
-"Bundle 'hdima/python-syntax'
-
-Bundle 'Shougo/unite.vim' 
-Bundle 'tsukkee/unite-tag' 
-Bundle 'Shougo/unite-outline' 
-Bundle 'Shougo/vimfiler.vim' 
-Bundle 'Shougo/neomru.vim' 
-Bundle 'Shougo/neocomplete.vim' 
-Bundle 'thinca/vim-unite-history' 
+Bundle 'Shougo/unite.vim'
+Bundle 'tsukkee/unite-tag'
+Bundle 'Shougo/unite-outline'
+Bundle 'Shougo/vimfiler.vim'
+Bundle 'Shougo/neomru.vim'
+Bundle 'Shougo/neocomplete.vim'
+Bundle 'thinca/vim-unite-history'
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -51,7 +49,7 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 " Other Shit
-" Why are swap files enabled by default? 
+" Why are swap files enabled by default?
 set nobackup
 set nowritebackup
 set noswapfile
@@ -68,12 +66,12 @@ set clipboard=unnamed
 set incsearch
 set ignorecase
 set smartcase
-" Make backspace work as indented 
+" Make backspace work as indented
 set backspace=indent,eol,start
 " So Pretty
 set cursorline
 " Why would I want to add a space when I join a line?
-set nojoinspaces 
+set nojoinspaces
 " Super fast key response times
 set ttimeout
 set ttimeoutlen=100
@@ -81,14 +79,14 @@ set ttimeoutlen=100
 set number
 "Find tags file
 set tags=tags;/
-" Fixs weird dinging 
+" Fixs weird dinging
 set visualbell
 " Enable line wrapping and put && at start of linebreak
 set wrap
 "set showbreak=&&
 set linebreak
 set breakindent
-" Doesn't turn long wrapped lines into @s 
+" Doesn't turn long wrapped lines into @s
 set display=lastline
 " Switch from unsaved buffers
 set hidden
@@ -138,31 +136,30 @@ map H ^
 nnoremap J :join!<cr>
 map K i<cr><esc>
 
-"Text Writing, copped straight from Dr. Bunsen 
-func! WordProcessorMode() 
-	setlocal formatoptions=1 
-	setlocal noexpandtab 
-	setlocal spell spelllang=en_us 
+"Text Writing, copped straight from Dr. Bunsen
+func! WordProcessorMode()
+	setlocal formatoptions=1
+	setlocal noexpandtab
+	setlocal spell spelllang=en_us
 	setlocal spell
 	set complete+=s
 	set formatprg=par
-	setlocal wrap 
 	setlocal nolist
 	set formatoptions+=l
-	setlocal linebreak 
+	setlocal linebreak
 	setlocal showbreak=
-endfu 
+endfu
 com! WP call WordProcessorMode()
 
 "File Type Settings
 augroup filetxt_txt
 	autocmd!
-	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()  
+	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()
 augroup END
 
 augroup filetype_md
 	autocmd!
-	autocmd BufEnter,BufRead,BufNewFile *.md call WordProcessorMode()  
+	autocmd BufEnter,BufRead,BufNewFile *.md call WordProcessorMode()
 augroup END
 
 augroup filetype_pde
@@ -189,20 +186,11 @@ nnoremap <silent> <leader>wa :wa<cr>
 nnoremap <silent> <leader>wq :wq<cr>
 nnoremap <silent> <leader>q :q<cr>
 
-" Close quickfix list
+"Close quickfix list
 nnoremap <silent> <leader>c :ccl<cr>
 
-"Easier pasting from clipboard
-nmap <leader>p "+p
-nmap <leader>P "+P
-vmap <leader>p "+p
-vmap <leader>P "+P
-
-"Easier wanking to clipboard
-nmap <leader>y "+y
-nmap <leader>Y "+y$
-vmap <leader>y "+y
-vmap <leader>Y "+y$
+"Fix Whitespace
+nnoremap <silent> <leader>ws :FixWhitespace<cr>
 
 "Buffer Management
 nnoremap <silent> <left> :bprev<CR>
@@ -241,14 +229,14 @@ vnoremap <leader>1 I# <esc>
 vnoremap <leader>2 I## <esc>
 vnoremap <leader>3 I### <esc>
 
-vnoremap <silent> <leader>1 :s/^/\#\ / <cr> 
-vnoremap <silent> <leader>2 :s/^/\##\ / <cr> 
-vnoremap <silent> <leader>3 :s/^/\###\ / <cr> 
+vnoremap <silent> <leader>1 :s/^/\#\ / <cr>
+vnoremap <silent> <leader>2 :s/^/\##\ / <cr>
+vnoremap <silent> <leader>3 :s/^/\###\ / <cr>
 "List
 "Command to make ordered lists
 command! -nargs=0 -range=% Number <line1>,<line2>s/^\s*\zs/\=(line('.') - <line1>+1).'. '
-vnoremap <silent> <leader>l :s/^/\+\ / <cr> 
-nnoremap <silent> <leader>l I+ <esc> 
+vnoremap <silent> <leader>l :s/^/\+\ / <cr>
+nnoremap <silent> <leader>l I+ <esc>
 vnoremap <silent> <leader>o :Number<cr>
 
 "Cap word
