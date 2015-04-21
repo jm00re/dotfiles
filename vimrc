@@ -24,7 +24,10 @@ Bundle 'reedes/vim-wordy'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
-Bundle 'bronson/vim-trailing-whitespace'
+"Clojure stuff
+Bundle 'guns/vim-clojure-static'
+Bundle 'guns/vim-clojure-highlight'
+Bundle 'tpope/vim-fireplace'
 
 Bundle 'Shougo/unite.vim'
 Bundle 'tsukkee/unite-tag'
@@ -107,8 +110,8 @@ hi Normal ctermbg = 0
 hi TabLineFill ctermfg=0 ctermbg=0
 
 "hi TabLineSel ctermfg=Red ctermbg=Yellow
-hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
-hi BufTabLineCurrent ctermfg=DarkGreen ctermbg=black
+hi BufTabLineActive ctermfg=DarkGreen ctermbg=black
+hi BufTabLineCurrent ctermfg=DarkBlue ctermbg=black
 hi BufTabLineHidden ctermbg=Black ctermfg=Gray
 
 "hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
@@ -138,16 +141,16 @@ map K i<cr><esc>
 
 "Text Writing, copped straight from Dr. Bunsen
 func! WordProcessorMode()
-	setlocal formatoptions=1
-	setlocal noexpandtab
-	setlocal spell spelllang=en_us
-	setlocal spell
-	set complete+=s
-	set formatprg=par
-	setlocal nolist
-	set formatoptions+=l
-	setlocal linebreak
-	setlocal showbreak=
+	"setlocal formatoptions=1
+	"setlocal noexpandtab
+	"setlocal spell spelllang=en_us
+	"setlocal spell
+	"set complete+=s
+	"set formatprg=par
+	"setlocal nolist
+	"set formatoptions+=l
+	"setlocal linebreak
+	"setlocal showbreak=
 endfu
 com! WP call WordProcessorMode()
 
@@ -186,11 +189,16 @@ nnoremap <silent> <leader>wa :wa<cr>
 nnoremap <silent> <leader>wq :wq<cr>
 nnoremap <silent> <leader>q :q<cr>
 
+"Yank whole buffer
+nnoremap <leader>y ggyG
+"Replace buffer with paste
+nnoremap <leader>p ggVGp
+
 "Close quickfix list
 nnoremap <silent> <leader>c :ccl<cr>
 
 "Fix Whitespace
-nnoremap <silent> <leader>ws :FixWhitespace<cr>
+"nnoremap <silent> <leader>ws :FixWhitespace<cr>
 
 "Buffer Management
 nnoremap <silent> <left> :bprev<CR>
@@ -316,9 +324,6 @@ autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
 
 let g:vimfiler_force_overwrite_statusline = 0
 
-" AG stuff
-"nnoremap <leader>/ :Ag <cword><cr>
-
 " Turn off K = docs in pde files
 let g:processing_doc_style = 0
 
@@ -361,10 +366,10 @@ let g:go_highlight_structs = 1
 
 let g:go_doc_keywordprg_enabled = 0
 " Auto add imports
-"let g:go_fmt_command = "goimports"
+" let g:go_fmt_command = "goimports"
 
 " make python look beautiful
-"let g:python_highlight_all = 1
+" let g:python_highlight_all = 1
 
 " neocomplete stuff I don't really care to understand but makes neocomplete work how I want
 let g:acp_enableAtStartup = 0

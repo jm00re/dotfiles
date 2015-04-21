@@ -39,6 +39,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 export TERM="xterm-256color"
 alias tmux="TERM=screen-256color-bce tmux"
+alias o="open"
 
 alias todo="vim ~/.todo.md"
 alias scratch="vim ~/.scratch.txt"
