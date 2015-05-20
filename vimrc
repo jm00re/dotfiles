@@ -24,6 +24,7 @@ Bundle 'reedes/vim-wordy'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
+
 "Clojure stuff
 Bundle 'guns/vim-clojure-static'
 Bundle 'guns/vim-clojure-highlight'
@@ -98,7 +99,9 @@ syntax on
 "Turn off stupid preview window
 set completeopt-=preview
 " Maximum colors
+set background=dark
 set t_Co=256
+let g:gruvbox_termcolors = 16
 
 "colorscheme base16-default
 "colorscheme molokai
@@ -141,16 +144,16 @@ map K i<cr><esc>
 
 "Text Writing, copped straight from Dr. Bunsen
 func! WordProcessorMode()
-	"setlocal formatoptions=1
-	"setlocal noexpandtab
-	"setlocal spell spelllang=en_us
-	"setlocal spell
-	"set complete+=s
-	"set formatprg=par
-	"setlocal nolist
-	"set formatoptions+=l
-	"setlocal linebreak
-	"setlocal showbreak=
+	setlocal formatoptions=1
+	setlocal noexpandtab
+	setlocal spell spelllang=en_us
+	setlocal spell
+	set complete+=s
+	set formatprg=par
+	setlocal nolist
+	set formatoptions+=l
+	setlocal linebreak
+	setlocal showbreak=
 endfu
 com! WP call WordProcessorMode()
 
@@ -158,11 +161,13 @@ com! WP call WordProcessorMode()
 augroup filetxt_txt
 	autocmd!
 	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()
+	autocmd FileType *.txt NeoCompleteLock
 augroup END
 
 augroup filetype_md
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.md call WordProcessorMode()
+	autocmd FileType markdown NeoCompleteLock
 augroup END
 
 augroup filetype_pde
