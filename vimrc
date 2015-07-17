@@ -17,10 +17,9 @@ Bundle 'triglav/vim-visual-increment'
 Bundle 'justinmk/vim-sneak'
 Bundle 'sophacles/vim-processing'
 Bundle 'vim-scripts/bufkill.vim'
-Bundle 'mhinz/vim-startify'
 Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/vimshell.vim'
 Bundle 'ap/vim-buftabline'
-Bundle 'reedes/vim-wordy'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
@@ -90,6 +89,9 @@ set wrap
 "set showbreak=&&
 set linebreak
 set breakindent
+
+set viminfo+=n~/.vim/viminfo
+
 " Doesn't turn long wrapped lines into @s
 set display=lastline
 " Switch from unsaved buffers
@@ -101,6 +103,7 @@ set completeopt-=preview
 " Maximum colors
 set background=dark
 set t_Co=256
+
 let g:gruvbox_termcolors = 16
 
 "colorscheme base16-default
@@ -127,6 +130,10 @@ cnoremap <CR> <CR>
 "j and k move down to the next text on wrapped lines
 map j gj
 map k gk
+
+"Improved indenting
+vmap > >gv
+vmap < <gv
 
 "I have no clue why this isn't enabled by default
 nnoremap Y y$
@@ -170,6 +177,13 @@ augroup filetype_md
 	autocmd FileType markdown NeoCompleteLock
 augroup END
 
+augroup filetype_tex
+	autocmd!
+	autocmd BufEnter,BufRead,BufNewFile *.tex call WordProcessorMode()
+	autocmd FileType latex NeoCompleteLock
+augroup END
+
+
 augroup filetype_pde
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.pde setf java
@@ -202,6 +216,9 @@ nnoremap <leader>p ggVGp
 "Close quickfix list
 nnoremap <silent> <leader>c :ccl<cr>
 
+"Format paragraph
+nnoremap <silent> <leader>f vipgq
+
 "Fix Whitespace
 "nnoremap <silent> <leader>ws :FixWhitespace<cr>
 
@@ -210,10 +227,9 @@ nnoremap <silent> <left> :bprev<CR>
 nnoremap <silent> <right> :bnext<CR>
 nnoremap <silent> <leader>d :BD<CR>
 
-"Tab Management
-nnoremap <silent> <down> :tabprev<CR>
-nnoremap <silent> <up> :tabnext<CR>
-
+"Make perusing buffers a bit easier while I'm moving through them
+nnoremap <silent> <up> <C-u>
+nnoremap <silent> <down> <C-d>
 
 "Quick spelling correction
 nnoremap <C-f> [s1z=<c-o>
