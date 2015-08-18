@@ -37,9 +37,12 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 #alias tmux="TERM=screen-256color-bce tmux"
 
-export TERM="xterm-256color"
-alias tmux="TERM=screen-256color-bce tmux"
+#export TERM="xterm-256color"
+#alias tmux="TERM=screen-256color-bce tmux"
 alias o="open"
+alias v="vim"
+alias ag="ag --color"
+alias node="node --harmony"
 
 alias todo="vim ~/.todo.md"
 alias scratch="vim ~/.scratch.txt"
@@ -54,7 +57,28 @@ if which tmux >/dev/null 2>&1; then
 fi
 
 autoload -U colors && colors
-PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~] %{$fg[blue]%}%% %{$reset_color%}"
+#PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~] %{$fg[blue]%}%% %{$reset_color%}"
+
+#PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~]
+#%{$fg[blue]%}›%{$fg[green]%}›%{$fg[yellow]%}›%{$reset_color%} "
+
+
+PS1="$fg[blue]%}[%*]%{$fg[green]%}[%n@%{$fg[green]%}%m]%{$fg[yellow]%}[%~]
+%{$fg[blue]%}›%{$fg[green]%}›%{$fg[yellow]%}›%{$reset_color%} "
+
+#PROMPT='%*'
+#PROMPT2='           %{$fg_bold[magenta]%}%c %{$fg_bold[white]%}… %_ %{$fg[white]%}▶ %{$reset_color%}'
+
+# continuously updated timestamp for every executed command ☺
+
+#PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~]
+#%{$fg[blue]%}›
+#%{$fg[blue]%}›
+#%{$fg[blue]%}›
+#%›{$reset_color%}"
+#›
+
+
 
 export GOPATH=$HOME/Code/Go
 
@@ -149,5 +173,3 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
-
-source ~/.opp.zsh/opp.zsh

@@ -23,6 +23,8 @@ Bundle 'ap/vim-buftabline'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
+Bundle 'unblevable/quick-scope'
+Bundle 'othree/yajs.vim'
 
 "Clojure stuff
 Bundle 'guns/vim-clojure-static'
@@ -155,12 +157,13 @@ func! WordProcessorMode()
 	setlocal noexpandtab
 	setlocal spell spelllang=en_us
 	setlocal spell
-	set complete+=s
-	set formatprg=par
 	setlocal nolist
-	set formatoptions+=l
 	setlocal linebreak
 	setlocal showbreak=
+	set complete+=s
+	set formatprg=par
+	set formatoptions+=l
+	syntax spell toplevel
 endfu
 com! WP call WordProcessorMode()
 
@@ -183,7 +186,6 @@ augroup filetype_tex
 	autocmd FileType latex NeoCompleteLock
 augroup END
 
-
 augroup filetype_pde
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.pde setf java
@@ -194,6 +196,8 @@ augroup remove_autocomment
 	autocmd!
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
+
+autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 
 "Leader Keys
 let mapleader = ','
@@ -274,14 +278,14 @@ nnoremap <leader>` gUw
 "Tmux stuff
 let g:tmux_navigator_no_mappings = 1
 
-nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-inoremap <silent> <C-h> <C-o>:TmuxNavigateLeft<cr><esc>
-inoremap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
-inoremap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
-inoremap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
+map <silent> <C-h> :TmuxNavigateLeft<cr>
+map <silent> <C-j> :TmuxNavigateDown<cr>
+map <silent> <C-k> :TmuxNavigateUp<cr>
+map <silent> <C-l> :TmuxNavigateRight<cr>
+imap <silent> <C-h> <C-o>:TmuxNavigateLeft<cr><esc>
+imap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
+imap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
+imap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 
 "Ack
 "nnoremap <leader>g :Ack <cword><cr>
@@ -339,8 +343,15 @@ nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
 
 "VimFiler Stuff
 nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
-"make q default to close vimfiler
+
+"Fix tmux in vimfiler
 autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
+autocmd FileType vimfiler map <buffer> <C-h> :TmuxNavigateLeft<cr>
+autocmd FileType vimfiler map <buffer> <C-j> :TmuxNavigateDown<cr>
+autocmd FileType vimfiler map <buffer> <C-k> :TmuxNavigateUp<cr>
+autocmd FileType vimfiler map <buffer> <C-l> :TmuxNavigateRight<cr>
+"make q default to close vimfiler
+
 autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
 
 let g:vimfiler_force_overwrite_statusline = 0
