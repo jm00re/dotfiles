@@ -17,13 +17,14 @@ Bundle 'triglav/vim-visual-increment'
 Bundle 'justinmk/vim-sneak'
 Bundle 'sophacles/vim-processing'
 Bundle 'vim-scripts/bufkill.vim'
-Bundle 'mhinz/vim-startify'
 Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/vimshell.vim'
 Bundle 'ap/vim-buftabline'
-Bundle 'reedes/vim-wordy'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
+Bundle 'unblevable/quick-scope'
+Bundle 'othree/yajs.vim'
 
 "Clojure stuff
 Bundle 'guns/vim-clojure-static'
@@ -91,6 +92,9 @@ set wrap
 "set showbreak=&&
 set linebreak
 set breakindent
+
+set viminfo+=n~/.vim/viminfo
+
 " Doesn't turn long wrapped lines into @s
 set display=lastline
 " Switch from unsaved buffers
@@ -102,6 +106,7 @@ set completeopt-=preview
 " Maximum colors
 set background=dark
 set t_Co=256
+
 let g:gruvbox_termcolors = 16
 
 "colorscheme base16-default
@@ -129,6 +134,10 @@ cnoremap <CR> <CR>
 map j gj
 map k gk
 
+"Improved indenting
+vmap > >gv
+vmap < <gv
+
 "I have no clue why this isn't enabled by default
 nnoremap Y y$
 
@@ -149,12 +158,13 @@ func! WordProcessorMode()
 	setlocal noexpandtab
 	setlocal spell spelllang=en_us
 	setlocal spell
-	set complete+=s
-	set formatprg=par
 	setlocal nolist
-	set formatoptions+=l
 	setlocal linebreak
 	setlocal showbreak=
+	set complete+=s
+	set formatprg=par
+	set formatoptions+=l
+	syntax spell toplevel
 endfu
 com! WP call WordProcessorMode()
 
@@ -171,6 +181,12 @@ augroup filetype_md
 	autocmd FileType markdown NeoCompleteLock
 augroup END
 
+augroup filetype_tex
+	autocmd!
+	autocmd BufEnter,BufRead,BufNewFile *.tex call WordProcessorMode()
+	autocmd FileType latex NeoCompleteLock
+augroup END
+
 augroup filetype_pde
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.pde setf java
@@ -181,6 +197,8 @@ augroup remove_autocomment
 	autocmd!
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
+
+autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 
 "Leader Keys
 let mapleader = ','
@@ -203,6 +221,9 @@ nnoremap <leader>p ggVGp
 "Close quickfix list
 nnoremap <silent> <leader>c :ccl<cr>
 
+"Format paragraph
+nnoremap <silent> <leader>f vipgq
+
 "Fix Whitespace
 "nnoremap <silent> <leader>ws :FixWhitespace<cr>
 
@@ -211,10 +232,9 @@ nnoremap <silent> <left> :bprev<CR>
 nnoremap <silent> <right> :bnext<CR>
 nnoremap <silent> <leader>d :BD<CR>
 
-"Tab Management
-nnoremap <silent> <down> :tabprev<CR>
-nnoremap <silent> <up> :tabnext<CR>
-
+"Make perusing buffers a bit easier while I'm moving through them
+nnoremap <silent> <up> <C-u>
+nnoremap <silent> <down> <C-d>
 
 "Quick spelling correction
 nnoremap <C-f> [s1z=<c-o>
@@ -263,14 +283,14 @@ nnoremap <leader>` gUw
 "Tmux stuff
 let g:tmux_navigator_no_mappings = 1
 
-nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
-nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
-nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
-inoremap <silent> <C-h> <C-o>:TmuxNavigateLeft<cr><esc>
-inoremap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
-inoremap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
-inoremap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
+map <silent> <C-h> :TmuxNavigateLeft<cr>
+map <silent> <C-j> :TmuxNavigateDown<cr>
+map <silent> <C-k> :TmuxNavigateUp<cr>
+map <silent> <C-l> :TmuxNavigateRight<cr>
+imap <silent> <C-h> <C-o>:TmuxNavigateLeft<cr><esc>
+imap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
+imap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
+imap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 
 "Ack
 "nnoremap <leader>g :Ack <cword><cr>
@@ -328,8 +348,15 @@ nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
 
 "VimFiler Stuff
 nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
-"make q default to close vimfiler
+
+"Fix tmux in vimfiler
 autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
+autocmd FileType vimfiler map <buffer> <C-h> :TmuxNavigateLeft<cr>
+autocmd FileType vimfiler map <buffer> <C-j> :TmuxNavigateDown<cr>
+autocmd FileType vimfiler map <buffer> <C-k> :TmuxNavigateUp<cr>
+autocmd FileType vimfiler map <buffer> <C-l> :TmuxNavigateRight<cr>
+"make q default to close vimfiler
+
 autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
 
 let g:vimfiler_force_overwrite_statusline = 0
