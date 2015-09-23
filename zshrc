@@ -63,8 +63,8 @@ autoload -U colors && colors
 #%{$fg[blue]%}›%{$fg[green]%}›%{$fg[yellow]%}›%{$reset_color%} "
 
 
-PS1="$fg[blue]%}[%*]%{$fg[green]%}[%n@%{$fg[green]%}%m]%{$fg[yellow]%}[%~]
-%{$fg[blue]%}›%{$fg[green]%}›%{$fg[yellow]%}›%{$reset_color%} "
+PS1="$fg[blue]%}[%*]%{$fg[cyan]%}[%n@%{$fg[cyan]%}%m]%{$fg[green]%}[%~]
+%{$fg[blue]%}›%{$fg[cyan]%}›%{$fg[green]%}›%{$reset_color%} "
 
 #PROMPT='%*'
 #PROMPT2='           %{$fg_bold[magenta]%}%c %{$fg_bold[white]%}… %_ %{$fg[white]%}▶ %{$reset_color%}'
@@ -173,3 +173,6 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 export KEYTIMEOUT=1
+
+# Remember this might break
+source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
