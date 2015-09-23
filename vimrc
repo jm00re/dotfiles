@@ -38,6 +38,7 @@ Bundle 'Shougo/vimfiler.vim'
 Bundle 'Shougo/neomru.vim'
 Bundle 'Shougo/neocomplete.vim'
 Bundle 'thinca/vim-unite-history'
+Bundle 'justinmk/vim-syntax-extra'
 
 Bundle 'molokai'
 Bundle 'zenburn'
@@ -271,6 +272,10 @@ command! -nargs=0 -range=% Number <line1>,<line2>s/^\s*\zs/\=(line('.') - <line1
 vnoremap <silent> <leader>l :s/^/\+\ / <cr>
 nnoremap <silent> <leader>l I+ <esc>
 vnoremap <silent> <leader>o :Number<cr>
+
+"Keep selection when indenting lines
+vnoremap <silent> < <gv
+vnoremap <silent> > >gv
 
 "Cap word
 nnoremap <leader>` gUw
