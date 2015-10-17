@@ -24,7 +24,7 @@ Bundle 'ap/vim-buftabline'
 Bundle 'fatih/vim-go'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'gabrielelana/vim-markdown'
-Bundle 'unblevable/quick-scope'
+"Bundle 'unblevable/quick-scope'
 Bundle 'othree/yajs.vim'
 
 "Clojure stuff
