@@ -26,6 +26,12 @@ Bundle 'gabrielelana/vim-markdown'
 "Bundle 'unblevable/quick-scope'
 Bundle 'othree/yajs.vim'
 
+"Scala stuff
+Bundle 'derekwyatt/vim-scala'
+
+"Swift Stuff
+Bundle 'keith/swift.vim'
+
 "Clojure stuff
 Bundle 'guns/vim-clojure-static'
 Bundle 'guns/vim-clojure-highlight'
