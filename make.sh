@@ -1,7 +1,7 @@
 #!/bin/bash
 
 dir=~/.dotfiles
-files="zshrc vimrc tmux.conf"
+files="zshrc vimrc tmux.conf nvimrc"
 
 cd $dir
 
