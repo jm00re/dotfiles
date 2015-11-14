@@ -8,7 +8,6 @@ Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-speeddating'
-Bundle 'tpope/vim-surround'
 
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'rking/ag.vim'
