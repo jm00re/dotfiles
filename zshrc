@@ -7,7 +7,7 @@
 setopt histignorealldups sharehistory
 
 # Use emacs keybindings even if our EDITOR is set to vi
-bindkey -v
+ bindkey -v
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
@@ -39,8 +39,8 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 #export TERM="xterm-256color"
 #alias tmux="TERM=screen-256color-bce tmux"
-alias o="open"
-alias v="vim"
+
+alias vim="nvim"
 alias ag="ag --color"
 alias node="node --harmony"
 
@@ -51,10 +51,10 @@ alias ls="ls -G"
 
 alias less="less -R"
 #if [ "$TMUX" = "" ]; then tmux; fi
-if which tmux >/dev/null 2>&1; then
-    #if not inside a tmux session, and if no session is started, start a new session
-    test -z "$TMUX" && (tmux attach || tmux new-session)
-fi
+#if which tmux >/dev/null 2>&1; then
+#    #if not inside a tmux session, and if no session is started, start a new session
+#    test -z "$TMUX" && (tmux attach || tmux new-session)
+#fi
 
 autoload -U colors && colors
 #PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~] %{$fg[blue]%}%% %{$reset_color%}"
@@ -176,3 +176,5 @@ export KEYTIMEOUT=1
 
 # Remember this might break
 source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

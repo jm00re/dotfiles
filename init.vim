@@ -10,6 +10,8 @@ Plug 'triglav/vim-visual-increment'
 Plug 'vim-scripts/bufkill.vim'
 Plug 'ap/vim-buftabline'
 Plug 'kien/rainbow_parentheses.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 "Language Specific Stuff
 Plug 'justinmk/vim-syntax-extra'
@@ -216,6 +218,9 @@ nnoremap <silent> <left> :bprev<CR>
 nnoremap <silent> <right> :bnext<CR>
 nnoremap <silent> <leader>d :BD<CR>
 
+tnoremap <silent> <left> <C-\><C-n>:bprev<CR>
+tnoremap <silent> <right> <C-\><C-n>:bnext<CR>
+
 "Make perusing buffers a bit easier while I'm moving through them
 nnoremap <silent> <up> <C-u>
 nnoremap <silent> <down> <C-d>
@@ -275,7 +280,10 @@ set laststatus=0 "always show statusline
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
 
 "zt sucks
-nnoremap <leader>t zt
+nnoremap <leader>z zt
+
+"open term
+nnoremap <leader>t :term<cr>
 
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
@@ -294,28 +302,28 @@ autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
 
 "Rainbow Parenthesis stuff
 let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
+\ ['brown',       'RoyalBlue3'],
+\ ['Darkblue',    'SeaGreen3'],
+\ ['darkgray',    'DarkOrchid3'],
+\ ['darkgreen',   'firebrick3'],
+\ ['darkcyan',    'RoyalBlue3'],
+\ ['darkred',     'SeaGreen3'],
+\ ['darkmagenta', 'DarkOrchid3'],
+\ ['brown',       'firebrick3'],
+\ ['gray',        'RoyalBlue3'],
+\ ['darkmagenta', 'DarkOrchid3'],
+\ ['Darkblue',    'firebrick3'],
+\ ['darkgreen',   'RoyalBlue3'],
+\ ['darkcyan',    'SeaGreen3'],
+\ ['darkred',     'DarkOrchid3'],
+\ ['red',         'firebrick3'],
+\ ]
 
 augroup rainbow
-	au VimEnter * RainbowParenthesesToggle
-	au Syntax * RainbowParenthesesLoadRound
-	au Syntax * RainbowParenthesesLoadSquare
-	au Syntax * RainbowParenthesesLoadBraces
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 augroup END
 
 " make Go look beautiful
@@ -331,20 +339,56 @@ let g:go_doc_keywordprg_enabled = 0
 " let g:python_highlight_all = 1
 
 " Fixing things that are busted in nvim
+
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
+
+"tnoremap <Esc> <C-\><C-n>
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
 
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
 tnoremap <C-l> <C-\><C-n><C-w>l
 
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd TermClose * call feedkeys('<cr>')
 
-nnoremap <space>n :e.<cr>
+"nnoremap <space>n :e.<cr>
 
 set viminfo+=n~/.config/nvim/tmpfiles/viminfo
 
 set ttimeout
 set ttimeoutlen=0
+
+" FZF Stuff
+"let g:fzf_layout = { 'window': 'enew' }
+
+nnoremap <silent> <space>n :Files<CR>
+nnoremap <silent> <space>b :Buffers<CR>
+nnoremap <silent> <space>/ SeachWordWithAg()<cr>
+vnoremap <silent> <space>/ SearchVisualSelectionWithAg<cr>
+nnoremap <silent> <space>t :Tags<CR>
+nnoremap <silent> <space>h :History<CR>
+nnoremap <silent> <leader>/ :execute 'Ag ' . input('Ag/')<CR>
+
+function! SearchWordWithAg()
+	execute 'Ag' expand('<cword>')
+endfunction
+
+function! SearchVisualSelectionWithAg() range
+	let old_reg = getreg('"')
+	let old_regtype = getregtype('"')
+	let old_clipboard = &clipboard
+	set clipboard&
+	normal! ""gvy
+	let selection = getreg('"')
+	call setreg('"', old_reg, old_regtype)
+	let &clipboard = old_clipboard
+	execute 'Ag' selection
+endfunction

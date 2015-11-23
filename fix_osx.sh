@@ -5,7 +5,7 @@
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock autohide-time-modifier -float 0.17
 # On second thought, let's make it fast to animate but hard to trigger
-defaults write com.apple.dock autohide-delay -int 2
+defaults write com.apple.dock autohide-delay -int 0
 
 # ANIMATE MORE FASTER
 defaults write NSGlobalDomain NSWindowResizeTime .1
@@ -26,8 +26,8 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
 # Show icons for hard drives, servers, and removable media on the desktop
-defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool false
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
