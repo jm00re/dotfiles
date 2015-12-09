@@ -124,6 +124,9 @@ map k gk
 vmap > >gv
 vmap < <gv
 
+nnoremap n nzz
+nnoremap N Nzz
+
 "I have no clue why this isn't enabled by default
 nnoremap Y y$
 
@@ -158,19 +161,16 @@ com! WP call WordProcessorMode()
 augroup filetxt_txt
 	autocmd!
 	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()
-	autocmd FileType *.txt NeoCompleteLock
 augroup END
 
 augroup filetype_md
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.md call WordProcessorMode()
-	autocmd FileType markdown NeoCompleteLock
 augroup END
 
 augroup filetype_tex
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.tex call WordProcessorMode()
-	autocmd FileType latex NeoCompleteLock
 augroup END
 
 augroup filetype_pde
@@ -244,22 +244,20 @@ nnoremap <silent> <leader>v :vsplit<cr>
 nnoremap <silent> <leader>h :split<cr>
 
 "Make heading
-nnoremap <leader>1 I# <esc>
-nnoremap <leader>2 I## <esc>
-nnoremap <leader>3 I### <esc>
+nnoremap <silent> <leader>1 :s/^\s*/&#\ / <cr>
+nnoremap <silent> <leader>2 :s/^\s*/&##\ / <cr>
+nnoremap <silent> <leader>3 :s/^\s*/&###\ / <cr>
 
-vnoremap <leader>1 I# <esc>
-vnoremap <leader>2 I## <esc>
-vnoremap <leader>3 I### <esc>
+vnoremap <silent> <leader>1 :s/^\s*/&#\ / <cr>
+vnoremap <silent> <leader>2 :s/^\s*/&##\ / <cr>
+vnoremap <silent> <leader>3 :s/^\s*/&###\ / <cr>
 
-vnoremap <silent> <leader>1 :s/^/\#\ / <cr>
-vnoremap <silent> <leader>2 :s/^/\##\ / <cr>
-vnoremap <silent> <leader>3 :s/^/\###\ / <cr>
 "List
 "Command to make ordered lists
 command! -nargs=0 -range=% Number <line1>,<line2>s/^\s*\zs/\=(line('.') - <line1>+1).'. '
-vnoremap <silent> <leader>l :s/^/\+\ / <cr>
-nnoremap <silent> <leader>l I+ <esc>
+vnoremap <silent> <leader>l :s/^\s*/&+\ / <cr>
+nnoremap <silent> <leader>l :s/^\s*/&+\ / <cr>
+"nnoremap <silent> <leader>l I+ <esc>
 vnoremap <silent> <leader>o :Number<cr>
 
 "Keep selection when indenting lines
@@ -280,10 +278,10 @@ set laststatus=0 "always show statusline
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
 
 "zt sucks
-nnoremap <leader>z zt
+nnoremap <leader>t zt
 
 "open term
-nnoremap <leader>t :term<cr>
+"nnoremap <leader>t :term<cr>
 
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
@@ -340,12 +338,16 @@ let g:go_doc_keywordprg_enabled = 0
 
 " Fixing things that are busted in nvim
 
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
 
-"tnoremap <Esc> <C-\><C-n>
+inoremap <C-h> <esc><C-w>h
+inoremap <C-j> <esc><C-w>j
+inoremap <C-k> <esc><C-w>k
+inoremap <C-l> <esc><C-w>l
+
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
@@ -367,7 +369,7 @@ set ttimeout
 set ttimeoutlen=0
 
 " FZF Stuff
-"let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'down': '~20%' }
 
 nnoremap <silent> <space>n :Files<CR>
 nnoremap <silent> <space>b :Buffers<CR>
