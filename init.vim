@@ -9,9 +9,15 @@ Plug 'wellle/targets.vim'
 Plug 'triglav/vim-visual-increment'
 Plug 'vim-scripts/bufkill.vim'
 Plug 'ap/vim-buftabline'
-Plug 'kien/rainbow_parentheses.vim'
+" Plug 'kien/rainbow_parentheses.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+" Plug 'scrooloose/syntastic'
+Plug 'luochen1990/rainbow'
+Plug 'christoomey/vim-tmux-navigator'
+
+"Autocomplete stuff
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 "Language Specific Stuff
 Plug 'justinmk/vim-syntax-extra'
@@ -23,6 +29,7 @@ Plug 'guns/vim-clojure-highlight'
 Plug 'othree/yajs.vim'
 Plug 'sophacles/vim-processing'
 Plug 'gabrielelana/vim-markdown'
+Plug 'jelera/vim-javascript-syntax'
 
 "Colors
 Plug 'molokai'
@@ -30,7 +37,7 @@ Plug 'zenburn'
 Plug 'inkpot'
 Plug 'desert256.vim'
 Plug 'nanotech/jellybeans.vim'
-Plug 'chriskempson/base16-vim'
+
 Plug 'altercation/vim-colors-solarized'
 Plug 'ronny/birds-of-paradise.vim'
 Plug 'morhetz/gruvbox'
@@ -45,9 +52,9 @@ set nobackup
 set nowritebackup
 set noswapfile
 " Smart tab defaults
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 " Auto indenting
 set autoindent
 set smarttab
@@ -100,7 +107,7 @@ let g:gruvbox_termcolors = 16
 colorscheme gruvbox
 
 " Gruvbox had some slightly dark word background. This fixes that
-hi Normal ctermbg = 0
+" hi Normal ctermbg = 0
 
 hi TabLineFill ctermfg=0 ctermbg=0
 
@@ -184,6 +191,10 @@ augroup remove_autocomment
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
 
+" augroup filetype_js
+" 	autocmd!
+" 	autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+" augroup END
 autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
 
 "Leader Keys
@@ -272,7 +283,7 @@ nnoremap <leader>` gUw
 
 "bufferline stuff
 "set laststatus=2 "always show statusline
-set laststatus=0 "always show statusline
+set laststatus=2 "always show statusline
 
 "statusline ala tpope
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
@@ -281,7 +292,7 @@ set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockSt
 nnoremap <leader>t zt
 
 "open term
-"nnoremap <leader>t :term<cr>
+nnoremap <leader>z :term<cr>
 
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
@@ -299,30 +310,33 @@ let g:processing_doc_style = 0
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
 
 "Rainbow Parenthesis stuff
-let g:rbpt_colorpairs = [
-\ ['brown',       'RoyalBlue3'],
-\ ['Darkblue',    'SeaGreen3'],
-\ ['darkgray',    'DarkOrchid3'],
-\ ['darkgreen',   'firebrick3'],
-\ ['darkcyan',    'RoyalBlue3'],
-\ ['darkred',     'SeaGreen3'],
-\ ['darkmagenta', 'DarkOrchid3'],
-\ ['brown',       'firebrick3'],
-\ ['gray',        'RoyalBlue3'],
-\ ['darkmagenta', 'DarkOrchid3'],
-\ ['Darkblue',    'firebrick3'],
-\ ['darkgreen',   'RoyalBlue3'],
-\ ['darkcyan',    'SeaGreen3'],
-\ ['darkred',     'DarkOrchid3'],
-\ ['red',         'firebrick3'],
-\ ]
+" let g:rbpt_colorpairs = [
+" \ ['brown',       'RoyalBlue3'],
+" \ ['Darkblue',    'SeaGreen3'],
+" \ ['darkgray',    'DarkOrchid3'],
+" \ ['darkgreen',   'firebrick3'],
+" \ ['darkcyan',    'RoyalBlue3'],
+" \ ['darkred',     'SeaGreen3'],
+" \ ['darkmagenta', 'DarkOrchid3'],
+" \ ['brown',       'firebrick3'],
+" \ ['gray',        'RoyalBlue3'],
+" \ ['darkmagenta', 'DarkOrchid3'],
+" \ ['Darkblue',    'firebrick3'],
+" \ ['darkgreen',   'RoyalBlue3'],
+" \ ['darkcyan',    'SeaGreen3'],
+" \ ['darkred',     'DarkOrchid3'],
+" \ ['red',         'firebrick3'],
+" \ ]
 
-augroup rainbow
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
-augroup END
+" augroup rainbow
+" au VimEnter * RainbowParenthesesToggle
+" au Syntax * RainbowParenthesesLoadRound
+" au Syntax * RainbowParenthesesLoadSquare
+" au Syntax * RainbowParenthesesLoadBraces
+" augroup END
+
+let g:rainbow_active = 1 "0 if you want to enable it later via :RainbowToggle
+
 
 " make Go look beautiful
 let g:go_highlight_functions = 1
@@ -373,24 +387,56 @@ let g:fzf_layout = { 'down': '~20%' }
 
 nnoremap <silent> <space>n :Files<CR>
 nnoremap <silent> <space>b :Buffers<CR>
-nnoremap <silent> <space>/ SeachWordWithAg()<cr>
-vnoremap <silent> <space>/ SearchVisualSelectionWithAg<cr>
 nnoremap <silent> <space>t :Tags<CR>
 nnoremap <silent> <space>h :History<CR>
-nnoremap <silent> <leader>/ :execute 'Ag ' . input('Ag/')<CR>
+nnoremap <silent> <space>/ :execute 'Ag ' . input('Ag/')<CR>
 
-function! SearchWordWithAg()
-	execute 'Ag' expand('<cword>')
-endfunction
+let g:fzf_history_dir = '~/.local/share/fzf-history'
 
-function! SearchVisualSelectionWithAg() range
-	let old_reg = getreg('"')
-	let old_regtype = getregtype('"')
-	let old_clipboard = &clipboard
-	set clipboard&
-	normal! ""gvy
-	let selection = getreg('"')
-	call setreg('"', old_reg, old_regtype)
-	let &clipboard = old_clipboard
-	execute 'Ag' selection
-endfunction
+"" syntastic stuff
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"
+"let g:syntastic_javascript_checkers = ['standard']
+"let g:syntastic_python_checkers = ['pylint']
+"
+"let g:syntastic_loc_list_height=3
+
+autocmd Filetype javascript setlocal ts=2 sw=2 expandtab
+
+"Fix this
+"nnoremap <silent> <leader>/ call SeachWordWithAg()<cr>
+"vnoremap <silent> <leader>/ call SearchVisualSelectionWithAg()<cr>
+"
+"function! SearchWordWithAg()
+"	execute 'Ag' expand('<cword>')
+"endfunction
+"
+"function! SearchVisualSelectionWithAg() range
+"	let old_reg = getreg('"')
+"	let old_regtype = getregtype('"')
+"	let old_clipboard = &clipboard
+"	set clipboard&
+"	normal! ""gvy
+"	let selection = getreg('"')
+"	call setreg('"', old_reg, old_regtype)
+"	let &clipboard = old_clipboard
+"	execute 'Ag' selection
+"endfunction
+
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-l> :TmuxNavigateRight<cr>
+
+"nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+"nnoremap <leader>td i\todo[inline]{jm:}<esc>F:a<space>
+

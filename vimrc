@@ -1,58 +1,56 @@
 set nocompatible
 filetype off
-set rtp+=~/.vim/bundle/vundle
-call vundle#begin()
+"set rtp+=~/.vim/bundle/vundle
+set rtp+=/usr/local/opt/fzf
+call plug#begin('~/.vim/plugged')
 
-Bundle 'gmarik/vundle'
+Plug 'gmarik/vundle'
 
-Bundle 'tpope/vim-unimpaired'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-speeddating'
-Bundle 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-surround'
 
-Bundle 'christoomey/vim-tmux-navigator'
-Bundle 'rking/ag.vim'
-Bundle 'wellle/targets.vim'
-Bundle 'triglav/vim-visual-increment'
-Bundle 'justinmk/vim-sneak'
-Bundle 'vim-scripts/bufkill.vim'
-Bundle 'Shougo/vimproc.vim'
-Bundle 'Shougo/vimshell.vim'
-Bundle 'ap/vim-buftabline'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'gabrielelana/vim-markdown'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'rking/ag.vim'
+Plug 'wellle/targets.vim'
+Plug 'triglav/vim-visual-increment'
+Plug 'justinmk/vim-sneak'
+Plug 'vim-scripts/bufkill.vim'
+Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/vimshell.vim'
+Plug 'ap/vim-buftabline'
+Plug 'kien/rainbow_parentheses.vim'
+" Plug 'xolox/vim-easytags'
+" Plug 'xolox/vim-misc'
 
 "Language Specific Stuff
-Bundle 'justinmk/vim-syntax-extra'
-Bundle 'derekwyatt/vim-scala'
-Bundle 'fatih/vim-go'
-Bundle 'keith/swift.vim'
-Bundle 'guns/vim-clojure-static'
-Bundle 'guns/vim-clojure-highlight'
-Bundle 'othree/yajs.vim'
-Bundle 'sophacles/vim-processing'
+Plug 'justinmk/vim-syntax-extra'
+Plug 'derekwyatt/vim-scala'
+Plug 'fatih/vim-go'
+Plug 'keith/swift.vim'
+Plug 'guns/vim-clojure-static'
+Plug 'guns/vim-clojure-highlight'
+Plug 'othree/yajs.vim'
+Plug 'sophacles/vim-processing'
+Plug 'tmux-plugins/vim-tmux'
 
-"Unite stuff, I think I'm going to try and purge all of this and move to neovim
-Bundle 'Shougo/unite.vim'
-Bundle 'tsukkee/unite-tag'
-Bundle 'Shougo/unite-outline'
-Bundle 'Shougo/vimfiler.vim'
-Bundle 'Shougo/neomru.vim'
-Bundle 'Shougo/neocomplete.vim'
-Bundle 'thinca/vim-unite-history'
+"fzf stuff
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 "Colors
-Bundle 'molokai'
-Bundle 'zenburn'
-Bundle 'inkpot'
-Bundle 'desert256.vim'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'chriskempson/base16-vim'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'ronny/birds-of-paradise.vim'
-Bundle 'morhetz/gruvbox'
+Plug 'molokai'
+Plug 'zenburn'
+Plug 'inkpot'
+Plug 'desert256.vim'
+Plug 'nanotech/jellybeans.vim'
+Plug 'chriskempson/base16-vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'ronny/birds-of-paradise.vim'
+Plug 'morhetz/gruvbox'
 
-call vundle#end()            " required
+call plug#end()            " required
 
 filetype plugin indent on    " required
 
@@ -70,6 +68,8 @@ set autoindent
 set smarttab
 " yank / paste to clipboard
 set clipboard=unnamed
+" mouse
+set mouse=a
 " Case insensitive searching
 set incsearch
 set ignorecase
@@ -87,6 +87,7 @@ set ttimeoutlen=100
 set number
 "Find tags file
 set tags=tags;/
+" set tags=./tags,tags;
 " Fixs weird dinging
 set visualbell
 " Enable line wrapping and put && at start of linebreak
@@ -106,24 +107,28 @@ syntax on
 "Turn off stupid preview window
 set completeopt-=preview
 " Maximum colors
-set background=dark
+" set background=dark
+set termguicolors
 set t_Co=256
 
-let g:gruvbox_termcolors = 16
+"let g:gruvbox_termcolors = 16
 
 "colorscheme base16-default
 "colorscheme molokai
 colorscheme gruvbox
 
 " Gruvbox had some slightly dark word background. This fixes that
-hi Normal ctermbg = 0
+" hi Normal ctermbg = 0
 
-hi TabLineFill ctermfg=0 ctermbg=0
+
+"hi TabLineFill ctermfg=0 ctermbg=1
 
 "hi TabLineSel ctermfg=Red ctermbg=Yellow
-hi BufTabLineActive ctermfg=DarkGreen ctermbg=black
-hi BufTabLineCurrent ctermfg=DarkBlue ctermbg=black
-hi BufTabLineHidden ctermbg=Black ctermfg=Gray
+
+"hi BufTabLineActive ctermfg=DarkGreen ctermbg=Black
+"hi BufTabLineCurrent ctermfg=DarkBlue ctermbg=Black
+"hi BufTabLineHidden ctermbg=Gray ctermfg=Black
+"hi BufTabLineFill ctermbg=Gray ctermfg=Gray
 
 "hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
 "hi BufTabLineCurrent ctermfg=DarkGreen ctermbg=black
@@ -174,19 +179,19 @@ com! WP call WordProcessorMode()
 augroup filetxt_txt
 	autocmd!
 	autocmd BufEnter,BufNewFile,BufRead *.txt call WordProcessorMode()
-	autocmd FileType *.txt NeoCompleteLock
+	"autocmd FileType *.txt NeoCompleteLock
 augroup END
 
 augroup filetype_md
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.md call WordProcessorMode()
-	autocmd FileType markdown NeoCompleteLock
+	"autocmd FileType markdown NeoCompleteLock
 augroup END
 
 augroup filetype_tex
 	autocmd!
 	autocmd BufEnter,BufRead,BufNewFile *.tex call WordProcessorMode()
-	autocmd FileType latex NeoCompleteLock
+	"autocmd FileType latex NeoCompleteLock
 augroup END
 
 augroup filetype_pde
@@ -316,50 +321,50 @@ nnoremap <leader>t zt
 let g:netrw_liststyle=3
 let g:netrw_banner=0
 
-"Disable folding in vim markdown plugin
-let g:markdown_enable_folding = 0
-let g:markdown_include_jekyll_support = 0
-let g:markdown_enable_mappings = 0
+""Disable folding in vim markdown plugin
+"let g:markdown_enable_folding = 0
+"let g:markdown_include_jekyll_support = 0
+"let g:markdown_enable_mappings = 0
 
 "Unite stuff
 "Unite ag settings
-let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts =
-          \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-          \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-let g:unite_source_grep_recursive_opt = ''
+" let g:unite_source_grep_command = 'ag'
+" let g:unite_source_grep_default_opts =
+"           \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
+"           \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+" let g:unite_source_grep_recursive_opt = ''
+" 
+" "Set unite highlight color as the cursorline
+" call unite#custom#profile('default', 'context', { 'cursor_line_highlight' : 'CursorLine' })
+" 
+" let g:unite_source_history_yank_enable = 1
 
-"Set unite highlight color as the cursorline
-call unite#custom#profile('default', 'context', { 'cursor_line_highlight' : 'CursorLine' })
-
-let g:unite_source_history_yank_enable = 1
-
-nnoremap <space>y :Unite -silent -no-resize -no-split history/yank<cr>
-
-nnoremap <space>m :Unite -silent -no-resize -no-split file_mru<cr>
-nnoremap <space>b :Unite -silent -no-resize -no-split buffer<cr>
-nnoremap <space>o :Unite -silent -no-resize -no-split outline<cr>
-nnoremap <space>h :Unite -silent -no-resize -no-split history/command<cr>
-
-nnoremap <space>/ :Unite -silent -no-start-insert -no-resize -no-split grep:.<cr>
-nnoremap <leader>/ :UniteWithCursorWord -silent -no-start-insert -no-resize -no-split grep:.<cr>
-
-nnoremap <space>v :Unite -silent -no-resize -no-split -start-insert buffer<cr>
-"nnoremap <space>c :Unite -silent -no-resize -no-split tag/include<cr>
-nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
-
-"VimFiler Stuff
-nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
-
-"Fix tmux in vimfiler
-autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
-autocmd FileType vimfiler map <buffer> <C-h> :TmuxNavigateLeft<cr>
-autocmd FileType vimfiler map <buffer> <C-j> :TmuxNavigateDown<cr>
-autocmd FileType vimfiler map <buffer> <C-k> :TmuxNavigateUp<cr>
-autocmd FileType vimfiler map <buffer> <C-l> :TmuxNavigateRight<cr>
-"make q default to close vimfiler
-
-autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
+" nnoremap <space>y :Unite -silent -no-resize -no-split history/yank<cr>
+" 
+" nnoremap <space>m :Unite -silent -no-resize -no-split file_mru<cr>
+" nnoremap <space>b :Unite -silent -no-resize -no-split buffer<cr>
+" nnoremap <space>o :Unite -silent -no-resize -no-split outline<cr>
+" nnoremap <space>h :Unite -silent -no-resize -no-split history/command<cr>
+" 
+" nnoremap <space>/ :Unite -silent -no-start-insert -no-resize -no-split grep:.<cr>
+" nnoremap <leader>/ :UniteWithCursorWord -silent -no-start-insert -no-resize -no-split grep:.<cr>
+" 
+" nnoremap <space>v :Unite -silent -no-resize -no-split -start-insert buffer<cr>
+" "nnoremap <space>c :Unite -silent -no-resize -no-split tag/include<cr>
+" nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
+" 
+" "VimFiler Stuff
+" nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
+" 
+" "Fix tmux in vimfiler
+" autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
+" autocmd FileType vimfiler map <buffer> <C-h> :TmuxNavigateLeft<cr>
+" autocmd FileType vimfiler map <buffer> <C-j> :TmuxNavigateDown<cr>
+" autocmd FileType vimfiler map <buffer> <C-k> :TmuxNavigateUp<cr>
+" autocmd FileType vimfiler map <buffer> <C-l> :TmuxNavigateRight<cr>
+" "make q default to close vimfiler
+" 
+" autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
 
 let g:vimfiler_force_overwrite_statusline = 0
 
@@ -373,23 +378,24 @@ let g:vimfiler_as_default_explorer = 1
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
 
 "Rainbow Parenthesis stuff
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
+"TODO: Fix this
+" let g:rbpt_colorpairs = [
+"     \ ['brown',       'RoyalBlue3'],
+"     \ ['Darkblue',    'SeaGreen3'],
+"     \ ['darkgray',    'DarkOrchid3'],
+"     \ ['darkgreen',   'firebrick3'],
+"     \ ['darkcyan',    'RoyalBlue3'],
+"     \ ['darkred',     'SeaGreen3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['brown',       'firebrick3'],
+"     \ ['gray',        'RoyalBlue3'],
+"     \ ['darkmagenta', 'DarkOrchid3'],
+"     \ ['Darkblue',    'firebrick3'],
+"     \ ['darkgreen',   'RoyalBlue3'],
+"     \ ['darkcyan',    'SeaGreen3'],
+"     \ ['darkred',     'DarkOrchid3'],
+"     \ ['red',         'firebrick3'],
+"     \ ]
 
 augroup rainbow
 	au VimEnter * RainbowParenthesesToggle
@@ -436,3 +442,16 @@ function! s:my_cr_function()
 endfunction
 
 let g:neocomplete#use_vimproc = 1
+
+let g:fzf_layout = { 'down': '~20%' }
+
+nnoremap <silent> <space>f :Files<CR>
+nnoremap <silent> <space>b :Buffers<CR>
+nnoremap <silent> <space>t :Tags<CR>
+nnoremap <silent> <space>h :History<CR>
+nnoremap <silent> <space>l :Lines<CR>
+nnoremap <silent> <space>L :BLines<CR>
+
+nnoremap <silent> <space>/ :execute 'Ag ' . input('Ag: ')<CR>
+
+let g:fzf_history_dir = '~/.local/share/fzf-history'
