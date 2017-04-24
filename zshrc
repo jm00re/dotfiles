@@ -1,12 +1,7 @@
 # Set up the prompt
-
-#autoload -Uz promptinit
-#promptinit
-#prompt bart
-
 setopt histignorealldups sharehistory
 
-# Use emacs keybindings even if our EDITOR is set to vi
+# Use vim keybindings even if our EDITOR is set to vi
  bindkey -v
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
@@ -18,6 +13,7 @@ HISTFILE=~/.zsh_history
 autoload -Uz compinit
 compinit
 
+# Not totally sure what this does. But it's been here forever so I like it.
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
@@ -37,7 +33,10 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # alias tmux="TERM=screen-256color-bce tmux"
 
-alias tmux="env TERM=xterm-256color tmux"
+#alias tmux="env TERM=xterm-256color tmux"
+alias tmux="env TERM=screen-256color tmux"
+
+#export TERM="screen-256color"
 
 # Use stronger encryption with hdiutil
 alias hdc="hdiutil create -size 1g -encryption AES-256 -type SPARSE -fs HFS+" 
@@ -45,20 +44,22 @@ alias hda="hdiutil attach"
 alias hdd="hdiutil detach"
 alias hdr="diskutil rename"
 
-
-#export TERM="xterm-256color"
-#alias tmux="TERM=screen-256color-bce tmux"
-
-# alias vim='NVIM_TUI_ENABLE_TRUE_COLOR=1 nvim'
 alias nvim='NVIM_TUI_ENABLE_TRUE_COLOR=1 nvim'
 alias emacs="emacs --no-splash"
-alias ag="ag --color"
+alias ag="ag --ignore=~/.ignore --color"
 alias node="node --harmony"
 alias nocolor="perl -pe 's/\e\[?.*?[\@-~]//g'"
 
-alias strip_after_colon="awk -F':' '{print \$1}'"
+alias v='vim'
+alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 
+alias strip_after_colon="awk -F':' '{print \$1}'"
 alias strip_color_codes="perl -pe 's/\e\[?.*?[\@-~]//g'"
+alias get_ag_file="strip_after_colon | strip_color_codes | uniq"
+
+filter_length() {
+	awk -v var="$1" "length(\$0) < var"
+}
 
 #sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
 #editor = "NVIM_TUI_ENABLE_TRUE_COLOR=1 nvim"
@@ -84,42 +85,9 @@ alias less="less -R"
 # fi
 
 autoload -U colors && colors
-#PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~] %{$fg[blue]%}%% %{$reset_color%}"
-
-#PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~]
-#%{$fg[blue]%}›%{$fg[green]%}›%{$fg[yellow]%}›%{$reset_color%} "
-
 
 PS1="$fg[blue]%}[%*]%{$fg[cyan]%}[%n@%{$fg[cyan]%}%m]%{$fg[green]%}[%~]
 %{$fg[blue]%}›%{$fg[cyan]%}›%{$fg[green]%}›%{$reset_color%} "
-
-#PROMPT='%*'
-#PROMPT2='           %{$fg_bold[magenta]%}%c %{$fg_bold[white]%}… %_ %{$fg[white]%}▶ %{$reset_color%}'
-
-# continuously updated timestamp for every executed command ☺
-
-#PS1="%{$fg[blue]%}[%n@%{$fg[blue]%}%m]%{$fg[green]%}[%~]
-#%{$fg[blue]%}›
-#%{$fg[blue]%}›
-#%{$fg[blue]%}›
-#%›{$reset_color%}"
-#›
-
-function least() 
-{
-	cat "$@" | lolcat -f | less -R
-}
-	
-function pythong() 
-{
-	python "$@" | lolcat -f 
-}
-
-#PROMPT="%t %{$fg[cyan]%}%?%{$resetcolor%} %{$fg[blue]%}%~%{$resetcolor%} %# "
-#RPROMPT="%{$fg[green]%}%t%{$reset_color%}"
-
-# alias tmux="tmux -2"
-
 
 typeset -Ag FX FG BG
 
@@ -151,10 +119,7 @@ function spectrum_bls() {
     print -P -- "$BG[$code]$code: Test %{$reset_color%}"
   done
 }
-#eval $(dircolors -b ~/.dir_colors)
 
-#PROMPT="%F{74}Test%f"
-#
 export EDITOR="vim"
 
 # Less Colors for Man Pages 
@@ -167,17 +132,7 @@ export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
 #man() {
-#      env \
-#		  LESS_TERMCAP_mb=$(printf "\e[1;31m") \
-#		  LESS_TERMCAP_md=$(printf "\e[1;31m") \
-#		  LESS_TERMCAP_me=$(printf "\e[0m") \
-#		  LESS_TERMCAP_se=$(printf "\e[0m") \
-#		  LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
-#		  LESS_TERMCAP_ue=$(printf "\e[0m") \
-#		  LESS_TERMCAP_us=$(printf "\e[1;32m") \
-#	  			   man "$@"
-#}
-#
+
 bindkey -v
 
 bindkey '^P' up-history
@@ -204,13 +159,16 @@ bindkey -M vicmd 'L' vi-end-of-line
 # Remember this might break
 source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-#alias vf="vim \`fzf\`"
+alias fzf="TERM=screen-256color fzf"
 
 # fzf + cd
 function fd() {
-	local dir
-	dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
-	print $dir
+	if [ "$#" -eq 0 ]
+	then
+		local dir
+		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+		print $dir
+	fi
 }
 
 # fzf -> open file in vim
@@ -237,6 +195,4 @@ function vf() {
 	fi
 }
 
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-

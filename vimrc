@@ -21,8 +21,7 @@ Plug 'Shougo/vimproc.vim'
 Plug 'Shougo/vimshell.vim'
 Plug 'ap/vim-buftabline'
 Plug 'kien/rainbow_parentheses.vim'
-" Plug 'xolox/vim-easytags'
-" Plug 'xolox/vim-misc'
+Plug 'Valloric/YouCompleteMe'
 
 "Language Specific Stuff
 Plug 'justinmk/vim-syntax-extra'
@@ -36,7 +35,7 @@ Plug 'sophacles/vim-processing'
 Plug 'tmux-plugins/vim-tmux'
 
 "fzf stuff
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 "Colors
@@ -96,12 +95,16 @@ set wrap
 set linebreak
 set breakindent
 
+" Not sure what this does
 set viminfo+=n~/.vim/viminfo
 
 " Doesn't turn long wrapped lines into @s
 set display=lastline
 " Switch from unsaved buffers
 set hidden
+"Turn on hlsearch
+" set hlsearch
+
 " ooo pretty
 syntax on
 "Turn off stupid preview window
@@ -117,31 +120,24 @@ set t_Co=256
 "colorscheme molokai
 colorscheme gruvbox
 
-" Gruvbox had some slightly dark word background. This fixes that
-" hi Normal ctermbg = 0
-
-
-"hi TabLineFill ctermfg=0 ctermbg=1
-
-"hi TabLineSel ctermfg=Red ctermbg=Yellow
-
-"hi BufTabLineActive ctermfg=DarkGreen ctermbg=Black
-"hi BufTabLineCurrent ctermfg=DarkBlue ctermbg=Black
-"hi BufTabLineHidden ctermbg=Gray ctermfg=Black
-"hi BufTabLineFill ctermbg=Gray ctermfg=Gray
+hi BufTabLineActive ctermfg=DarkGreen ctermbg=Black
+hi BufTabLineCurrent ctermfg=DarkBlue ctermbg=Black
+hi BufTabLineHidden ctermbg=Gray ctermfg=Black
+hi BufTabLineFill ctermbg=Gray ctermfg=Gray
 
 "hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
 "hi BufTabLineCurrent ctermfg=DarkGreen ctermbg=black
 "Key Remaps
+
 " Enter adds lines in normal mode
 nnoremap <CR> o<Esc>
 cnoremap <CR> <CR>
 
-"j and k move down to the next text on wrapped lines
+"j and k move down to the next text on wrapped lines not next line
 map j gj
 map k gk
 
-"Improved indenting
+"re-select indented lines
 vmap > >gv
 vmap < <gv
 
@@ -155,7 +151,7 @@ nnoremap \ ,
 map L $
 map H ^
 
-"K breaks lines, J makes more sense"
+"K breaks lines, J joins lines
 nnoremap J :join!<cr>
 map K i<cr><esc>
 
@@ -205,7 +201,11 @@ augroup remove_autocomment
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 augroup END
 
-autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+augroup filetype_js
+	autocmd!
+	autocmd Filetype javascript setlocal ts=2 sts=2 sw=2
+augroup END
+
 
 "Leader Keys
 let mapleader = ','
@@ -228,11 +228,11 @@ nnoremap <leader>p ggVGp
 "Close quickfix list
 nnoremap <silent> <leader>c :ccl<cr>
 
+"Clear highlighting
+nnoremap <silent> <leader>n :nohl<cr>
+
 "Format paragraph
 nnoremap <silent> <leader>f vipgq
-
-"Fix Whitespace
-"nnoremap <silent> <leader>ws :FixWhitespace<cr>
 
 "Buffer Management
 nnoremap <silent> <left> :bprev<CR>
@@ -276,7 +276,7 @@ vnoremap <silent> <leader>3 :s/^/\###\ / <cr>
 "List
 "Command to make ordered lists
 command! -nargs=0 -range=% Number <line1>,<line2>s/^\s*\zs/\=(line('.') - <line1>+1).'. '
-vnoremap <silent> <leader>l :s/^/\+\ / <cr>
+vnoremap <silent> <leader>l :s/^/\+\ <cr>
 nnoremap <silent> <leader>l I+ <esc>
 vnoremap <silent> <leader>o :Number<cr>
 
@@ -290,89 +290,32 @@ nnoremap <leader>` gUw
 "Tmux stuff
 let g:tmux_navigator_no_mappings = 1
 
-map <silent> <C-h> :TmuxNavigateLeft<cr>
-map <silent> <C-j> :TmuxNavigateDown<cr>
-map <silent> <C-k> :TmuxNavigateUp<cr>
-map <silent> <C-l> :TmuxNavigateRight<cr>
-imap <silent> <C-h> <C-o>:TmuxNavigateLeft<cr><esc>
-imap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
-imap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
-imap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
+nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
+nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
+nnoremap <silent> <C-l> :TmuxNavigateRight<cr>
 
-"Ack
-"nnoremap <leader>g :Ack <cword><cr>
+inoremap <silent> <C-h> <C-o>:TmuxNavigateLeft<cr><esc>
+inoremap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
+inoremap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
+inoremap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 
 "bufferline stuff
-"set laststatus=2 "always show statusline
-set laststatus=0 "always show statusline
+set laststatus=2 "always show statusline
+"set laststatus=0 "always show statusline
 
 "statusline ala tpope
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
 
-"Wordy stuff
-hi SpellBad cterm=underline ctermfg=darkred
-nnoremap <silent> <leader>z :NextWordy<cr>
-nnoremap <silent> <leader>Z :NoWordy<cr>
-
-"zt sucks
+"zt is hard to type
 nnoremap <leader>t zt
 
 "Make netrw look like NerdTREE
 let g:netrw_liststyle=3
 let g:netrw_banner=0
 
-""Disable folding in vim markdown plugin
-"let g:markdown_enable_folding = 0
-"let g:markdown_include_jekyll_support = 0
-"let g:markdown_enable_mappings = 0
-
-"Unite stuff
-"Unite ag settings
-" let g:unite_source_grep_command = 'ag'
-" let g:unite_source_grep_default_opts =
-"           \ '--line-numbers --nocolor --nogroup --hidden --ignore ' .
-"           \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-" let g:unite_source_grep_recursive_opt = ''
-" 
-" "Set unite highlight color as the cursorline
-" call unite#custom#profile('default', 'context', { 'cursor_line_highlight' : 'CursorLine' })
-" 
-" let g:unite_source_history_yank_enable = 1
-
-" nnoremap <space>y :Unite -silent -no-resize -no-split history/yank<cr>
-" 
-" nnoremap <space>m :Unite -silent -no-resize -no-split file_mru<cr>
-" nnoremap <space>b :Unite -silent -no-resize -no-split buffer<cr>
-" nnoremap <space>o :Unite -silent -no-resize -no-split outline<cr>
-" nnoremap <space>h :Unite -silent -no-resize -no-split history/command<cr>
-" 
-" nnoremap <space>/ :Unite -silent -no-start-insert -no-resize -no-split grep:.<cr>
-" nnoremap <leader>/ :UniteWithCursorWord -silent -no-start-insert -no-resize -no-split grep:.<cr>
-" 
-" nnoremap <space>v :Unite -silent -no-resize -no-split -start-insert buffer<cr>
-" "nnoremap <space>c :Unite -silent -no-resize -no-split tag/include<cr>
-" nnoremap <space>c :Unite -silent -no-resize -no-split tag<cr>
-" 
-" "VimFiler Stuff
-" nnoremap <silent> <space>n :VimFilerBufferDir -force-quit<cr>
-" 
-" "Fix tmux in vimfiler
-" autocmd FileType vimfiler map <buffer> q <Plug>(vimfiler_exit)
-" autocmd FileType vimfiler map <buffer> <C-h> :TmuxNavigateLeft<cr>
-" autocmd FileType vimfiler map <buffer> <C-j> :TmuxNavigateDown<cr>
-" autocmd FileType vimfiler map <buffer> <C-k> :TmuxNavigateUp<cr>
-" autocmd FileType vimfiler map <buffer> <C-l> :TmuxNavigateRight<cr>
-" "make q default to close vimfiler
-" 
-" autocmd FileType unite map <buffer> q <Plug>(unite_all_exit)
-
-let g:vimfiler_force_overwrite_statusline = 0
-
 " Turn off K = docs in pde files
 let g:processing_doc_style = 0
-
-" Use vimfiler as default file explorer
-let g:vimfiler_as_default_explorer = 1
 
 "Lets me use enter in the commandline history buffer, It's usually mapped to add lines
 autocmd CmdwinEnter * nnoremap <buffer> <CR> <CR>
@@ -408,50 +351,37 @@ augroup END
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
-
 let g:go_doc_keywordprg_enabled = 0
-" Auto add imports
-" let g:go_fmt_command = "goimports"
 
-" make python look beautiful
-" let g:python_highlight_all = 1
-
-" neocomplete stuff I don't really care to understand but makes neocomplete work how I want
-let g:acp_enableAtStartup = 0
-let g:neocomplete#enable_at_startup = 1
-let g:neocomplete#enable_smart_case = 1
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-
-if !exists('g:neocomplete#sources#omni#input_patterns')
-	  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
-        \ <SID>check_back_space() ? "\<TAB>" :
-        \ neocomplete#start_manual_complete()
-  function! s:check_back_space() "{{{
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction"
-
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-
-let g:neocomplete#use_vimproc = 1
-
+" FZF config
 let g:fzf_layout = { 'down': '~20%' }
 
 nnoremap <silent> <space>f :Files<CR>
 nnoremap <silent> <space>b :Buffers<CR>
 nnoremap <silent> <space>t :Tags<CR>
-nnoremap <silent> <space>h :History<CR>
+nnoremap <silent> <space>m :History<CR>
+nnoremap <silent> <space>h :History:<CR>
+nnoremap <silent> <space>s :History/<CR>
 nnoremap <silent> <space>l :Lines<CR>
 nnoremap <silent> <space>L :BLines<CR>
+nnoremap <silent> <space>c :Commands<CR>
+nnoremap <silent> <space>` :Marks<CR>
 
 nnoremap <silent> <space>/ :execute 'Ag ' . input('Ag: ')<CR>
+nnoremap <silent> <space>* :execute 'Ag ' . expand('<cword>')<CR>
+
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
 let g:fzf_history_dir = '~/.local/share/fzf-history'
