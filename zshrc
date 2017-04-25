@@ -163,10 +163,17 @@ alias fzf="TERM=screen-256color fzf"
 
 # fzf + cd
 function fd() {
+	local dir
 	if [ "$#" -eq 0 ]
 	then
-		local dir
-		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
+		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf ) && cd "$dir"
+		print $dir
+	elif [ "$#" -eq 1 ]
+	then
+		print $1
+		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf --filter=$1 | head -1)
+		print $(find -L ${1:-.} -type d 2> /dev/null)
+		cd "$dir"
 		print $dir
 	fi
 }
