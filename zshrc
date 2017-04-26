@@ -143,6 +143,35 @@ source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highligh
 
 alias fzf="TERM=screen-256color fzf"
 
+# fzf + cd
+function fd() {
+	local dir
+	if [ "$#" -eq 0 ]
+	then
+		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf ) && cd "$dir"
+		print $dir
+	elif [ "$#" -eq 1 ]
+	then
+		if [ "$1"=".." ]
+		then
+			get_parent_dirs() {
+				if [[ -d "${1}" ]]; then dirs+=("$1"); else return; fi
+				if [[ "${1}" == '/' ]]; then
+					for _dir in "${dirs[@]}"; do echo $_dir; done
+				else
+					get_parent_dirs $(dirname "$1")
+				fi
+			}
+			local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+			cd "$DIR"
+			print "$DIR"
+		else
+			dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf --filter=$1 | head -1) && cd "$dir"
+			print $dir
+		fi
+	fi
+}
+
 # fzf -> open file in vim
 function vf() {
 	if [ "$#" -eq 0 ]
