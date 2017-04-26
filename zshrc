@@ -28,15 +28,11 @@ zstyle ':completion:*' menu select=long
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
-
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-# alias tmux="TERM=screen-256color-bce tmux"
 
-#alias tmux="env TERM=xterm-256color tmux"
+# Mark tmux beautiful
 alias tmux="env TERM=screen-256color tmux"
-
-#export TERM="screen-256color"
 
 # Use stronger encryption with hdiutil
 alias hdc="hdiutil create -size 1g -encryption AES-256 -type SPARSE -fs HFS+" 
@@ -57,35 +53,20 @@ alias strip_after_colon="awk -F':' '{print \$1}'"
 alias strip_color_codes="perl -pe 's/\e\[?.*?[\@-~]//g'"
 alias get_ag_file="strip_after_colon | strip_color_codes | uniq"
 
+# Filter input lines by given length
 filter_length() {
 	awk -v var="$1" "length(\$0) < var"
 }
 
-#sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"
-#editor = "NVIM_TUI_ENABLE_TRUE_COLOR=1 nvim"
-
 alias todo="vim ~/.todo.md"
 alias notes="vim ~/.notes.md"
 alias scratch="vim ~/.scratch.txt"
-
 alias ls="ls -G"
-
 alias less="less -R"
-
-# if [ "$TMUX" = "" ]; then tmux; fi
-# if which tmux >/dev/null 2>&1; then
-#     #if not inside a tmux session, and if no session is started, start a new session
-#     test -z "$TMUX" && (tmux attach || tmux new-session)
-# fi
-
-# if [ "$EMACS" = "" ]; then emacs; fi
-# if which emacs >/dev/null 2>&1; then
-#     #if not inside a tmux session, and if no session is started, start a new session
-#     test -z "$TMUX" && (tmux attach || tmux new-session)
-# fi
 
 autoload -U colors && colors
 
+# My prompt
 PS1="$fg[blue]%}[%*]%{$fg[cyan]%}[%n@%{$fg[cyan]%}%m]%{$fg[green]%}[%~]
 %{$fg[blue]%}›%{$fg[cyan]%}›%{$fg[green]%}›%{$reset_color%} "
 
@@ -142,6 +123,7 @@ bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
 
+# Show the correct editor mode on the right hand side of the prompt
 function zle-line-init zle-keymap-select {
 	VIM_PROMPT="%{$fg[blue]%} [% NORMAL]%  %{$reset_color%}"
     RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
@@ -160,23 +142,6 @@ bindkey -M vicmd 'L' vi-end-of-line
 source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 alias fzf="TERM=screen-256color fzf"
-
-# fzf + cd
-function fd() {
-	local dir
-	if [ "$#" -eq 0 ]
-	then
-		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf ) && cd "$dir"
-		print $dir
-	elif [ "$#" -eq 1 ]
-	then
-		print $1
-		dir=$(find -L ${1:-.} -type d 2> /dev/null | fzf --filter=$1 | head -1)
-		print $(find -L ${1:-.} -type d 2> /dev/null)
-		cd "$dir"
-		print $dir
-	fi
-}
 
 # fzf -> open file in vim
 function vf() {
@@ -202,4 +167,23 @@ function vf() {
 	fi
 }
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# This might break if brew updates it
+source /usr/local/Cellar/zplug/2.4.1/init.zsh
+
+zplug "junegunn/fzf-bin", \
+    from:gh-r, \
+    as:command, \
+    rename-to:fzf, \
+    use:"*darwin*amd64*"
+
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+# Check for new plugins
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load
