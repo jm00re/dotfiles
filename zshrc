@@ -1,25 +1,25 @@
-# Set up the prompt
-setopt histignorealldups sharehistory
-
-# Use vim keybindings even if our EDITOR is set to vi
+# Ignore additional whitespace when writing to hist file
+setopt histignorealldups 
+# Share history between terminals
+setopt sharehistory
+# Use vi keybindings instead of emacs(default)
  bindkey -v
 
-# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
-HISTSIZE=1000
-SAVEHIST=1000
+# Keep 10000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=100000
+SAVEHIST=100000
 HISTFILE=~/.zsh_history
 
-# Use modern completion system
+# Enable zsh tab completition
 autoload -Uz compinit
 compinit
 
-# Not totally sure what this does. But it's been here forever so I like it.
+# This does fancy stuff for the completition engine
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
-#eval "$(dircolors -b)"
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -31,39 +31,65 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# Mark tmux beautiful
+# The one true editor
+export EDITOR="vim"
+
+# Mark tmux beautiful / enable maximum colors
 alias tmux="env TERM=screen-256color tmux"
 
-# Use stronger encryption with hdiutil
+# CLI knox replacement
 alias hdc="hdiutil create -size 1g -encryption AES-256 -type SPARSE -fs HFS+" 
 alias hda="hdiutil attach"
 alias hdd="hdiutil detach"
 alias hdr="diskutil rename"
 
-alias nvim='NVIM_TUI_ENABLE_TRUE_COLOR=1 nvim'
-alias emacs="emacs --no-splash"
-alias ag="ag --ignore=~/.ignore --color"
-alias node="node --harmony"
-alias nocolor="perl -pe 's/\e\[?.*?[\@-~]//g'"
+# pretty print things
+alias pp_json="python -m json.tool"
+alias pp_js="js-beautify"
+alias pp_xml="xmllint --format -"
 
+alias ag="ag -p ~/.ignore --color"
+# Enable modern node.js features
+alias node="node --harmony"
+
+# I never use these
 alias v='vim'
 alias r='ranger --choosedir=$HOME/.rangerdir; LASTDIR=`cat $HOME/.rangerdir`; cd "$LASTDIR"'
 
+# ag/fzf helpers
 alias strip_after_colon="awk -F':' '{print \$1}'"
 alias strip_color_codes="perl -pe 's/\e\[?.*?[\@-~]//g'"
+
+# better fzf functions
 alias get_ag_file="strip_after_colon | strip_color_codes | uniq"
+
+afv() {
+	if [ -t 0 ]; then
+		return
+	else
+		fzf --ansi -m | strip_color_codes | awk -F':' '{print ":e "$1"|:"$2i"|"}' | tr -d '\n' |
+		xargs -o -I {} vim -c "{} | redraw"
+	fi
+}
+
+va() {
+	if [ -t 0 ]; then
+		return
+	else
+		strip_color_codes | awk -F':' '{print ":e "$1"|:"$2i"|"}' | tr -d '\n' |
+		xargs -o -I {} vim -c "{} | redraw"
+	fi
+}
 
 # Filter input lines by given length
 filter_length() {
 	awk -v var="$1" "length(\$0) < var"
 }
 
-alias todo="vim ~/.todo.md"
-alias notes="vim ~/.notes.md"
-alias scratch="vim ~/.scratch.txt"
 alias ls="ls -G"
 alias less="less -R"
 
+# Enables color code shortcuts for my prompt
 autoload -U colors && colors
 
 # My prompt
@@ -81,19 +107,18 @@ FX=(
     reverse   "%{[07m%}" no-reverse   "%{[27m%}"
 )
 
+# Color testing functions
 for color in {000..255}; do
     FG[$color]="%{[38;5;${color}m%}"
     BG[$color]="%{[48;5;${color}m%}"
 done
 
-# Show all 256 colors with color number
 function spectrum_ls() {
   for code in {000..255}; do
     print -P -- "$code: %F{$code}Test%f"
   done
 }
 
-# Show all 256 colors where the background is set to specific color
 function spectrum_bls() {
   for code in {000..255}; do
     ((cc = code + 1))
@@ -101,7 +126,6 @@ function spectrum_bls() {
   done
 }
 
-export EDITOR="vim"
 
 # Less Colors for Man Pages 
 export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking 
@@ -111,17 +135,6 @@ export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
 export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box 
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline 
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
-
-#man() {
-
-bindkey -v
-
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
 
 # Show the correct editor mode on the right hand side of the prompt
 function zle-line-init zle-keymap-select {
@@ -138,12 +151,11 @@ export KEYTIMEOUT=1
 bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line
 
-# Remember this might break
-source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
+# This fixes an issue with truecolor support
 alias fzf="TERM=screen-256color fzf"
 
 # fzf + cd
+# TODO: this doesn't actualy work how i want it to
 function fd() {
 	local dir
 	if [ "$#" -eq 0 ]
@@ -162,7 +174,7 @@ function fd() {
 					get_parent_dirs $(dirname "$1")
 				fi
 			}
-			local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf-tmux --tac)
+			local DIR=$(get_parent_dirs $(realpath "${1:-$PWD}") | fzf)
 			cd "$DIR"
 			print "$DIR"
 		else
@@ -196,23 +208,8 @@ function vf() {
 	fi
 }
 
-# This might break if brew updates it
-source /usr/local/Cellar/zplug/2.4.1/init.zsh
+# Init fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-zplug "junegunn/fzf-bin", \
-    from:gh-r, \
-    as:command, \
-    rename-to:fzf, \
-    use:"*darwin*amd64*"
-
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
-
-# Check for new plugins
-if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-zplug load
+# Init zsh-syntax-highlighting, this might break with updates
+source /usr/local/Cellar/zsh-syntax-highlighting/0.2.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

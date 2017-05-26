@@ -12,13 +12,9 @@ Plug 'tpope/vim-speeddating'
 Plug 'tpope/vim-surround'
 
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'rking/ag.vim'
 Plug 'wellle/targets.vim'
 Plug 'triglav/vim-visual-increment'
-Plug 'justinmk/vim-sneak'
 Plug 'vim-scripts/bufkill.vim'
-Plug 'Shougo/vimproc.vim'
-Plug 'Shougo/vimshell.vim'
 Plug 'ap/vim-buftabline'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'Valloric/YouCompleteMe'
@@ -35,7 +31,6 @@ Plug 'sophacles/vim-processing'
 Plug 'tmux-plugins/vim-tmux'
 
 "fzf stuff
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
 "Colors
@@ -107,14 +102,11 @@ set hidden
 
 " ooo pretty
 syntax on
-"Turn off stupid preview window
+"Turn off the stupid preview window
 set completeopt-=preview
 " Maximum colors
-" set background=dark
 set termguicolors
 set t_Co=256
-
-"let g:gruvbox_termcolors = 16
 
 "colorscheme base16-default
 "colorscheme molokai
@@ -125,10 +117,7 @@ hi BufTabLineCurrent ctermfg=DarkBlue ctermbg=Black
 hi BufTabLineHidden ctermbg=Gray ctermfg=Black
 hi BufTabLineFill ctermbg=Gray ctermfg=Gray
 
-"hi BufTabLineActive ctermfg=DarkBlue ctermbg=black
-"hi BufTabLineCurrent ctermfg=DarkGreen ctermbg=black
 "Key Remaps
-
 " Enter adds lines in normal mode
 nnoremap <CR> o<Esc>
 cnoremap <CR> <CR>
@@ -300,9 +289,7 @@ inoremap <silent> <C-j> <C-o>:TmuxNavigateDown<cr><esc>
 inoremap <silent> <C-k> <C-o>:TmuxNavigateUp<cr><esc>
 inoremap <silent> <C-l> <C-o>:TmuxNavigateRight<cr><esc>
 
-"bufferline stuff
 set laststatus=2 "always show statusline
-"set laststatus=0 "always show statusline
 
 "statusline ala tpope
 set statusline=[%n]\ %<%.99f\ %h%w%m%r%{exists('*CapsLockStatusline')?CapsLockStatusline():''}%y%=%-16(\ %l,%c-%v\ %)%P
